@@ -585,7 +585,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                 }
             });
             break;
-        case "15":
+        case "5":
             Swal.fire({
                 title: '¿Seguro que dará salida a la unidad?',
                 text: "",

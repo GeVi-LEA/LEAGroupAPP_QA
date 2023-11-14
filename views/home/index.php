@@ -72,7 +72,7 @@ require_once views_root . 'home/assets/permisos.js.php';
                 </a>
             </div>
             <div class='col col-6 '>
-                <a href='<?= principalUrl ?>?controller=Servicios&action=listaUnidades&idEst=15'>
+                <a href='<?= principalUrl ?>?controller=Servicios&action=listaUnidades&idEst=5'>
                     <div class='card sombra btn-Liberacion'>
                         <span class="badge buttonAnimation" data-animation="jello" id="Liberacion_badge"></span>
                         <div class='card-content'>
@@ -168,7 +168,7 @@ require_once views_root . 'home/assets/permisos.js.php';
                     </div>
                 </a>
             </div>
-            <div class='col col-6  '>
+            <div class='col col-6  ' hidden>
                 <a href='<?= principalUrl ?>?controller=Servicios&action=listaUnidades&idEst=14'>
                     <div class='card sombra btn-Salida'>
                         <span class="badge buttonAnimation" data-animation="jello" id="Salida_badge"></span>
