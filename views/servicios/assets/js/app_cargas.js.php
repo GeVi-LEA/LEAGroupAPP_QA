@@ -810,12 +810,6 @@ function detenerServicio(id, almacen_id = "1") {
 
             } else {
 
-
-                // $("#enviarAlmacenModal1").modal("show");
-                // $("#enviarFinalizarServicio").unbind();
-                // $("#enviarFinalizarServicio").click(function() {
-                // if (validarDatosEnviarAlmacen()) {
-
                 $.confirm({
                     title: "<span class='material-icons i-warning'>warning</span><span>¡Atención!<span>",
                     content: "<b>¿Finalizar servicio?</b>",
