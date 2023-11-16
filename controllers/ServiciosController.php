@@ -669,6 +669,10 @@ class serviciosController
         $operacion       = isset($_POST['operacionEnviar']) ? $_POST['operacionEnviar'] : null;
         $BarreduraSucia  = isset($_POST['BarreduraSucia']) ? $_POST['BarreduraSucia'] : null;
         $BarreduraLimpia = isset($_POST['BarreduraLimpia']) ? $_POST['BarreduraLimpia'] : null;
+        $sello1          = isset($_POST['sello1']) ? $_POST['sello1'] : null;
+        $sello2          = isset($_POST['sello2']) ? $_POST['sello2'] : null;
+        $sello3          = isset($_POST['sello3']) ? $_POST['sello3'] : null;
+        $entrada_id      = isset($_POST['entrada_id']) ? $_POST['entrada_id'] : null;
 
         if ($operacion != 'E') {
             $m = new ServicioMovimientoAlmacen();
@@ -679,7 +683,15 @@ class serviciosController
             $r        = $m->save();
             $servicio = new ServicioEnsacado();
             $servicio->setId($idServicio);
-            $r = $servicio->finalizarServicio();
+            $r                = $servicio->finalizarServicio();
+            $servicio_entrada = new ServicioEntrada();
+            $servicio_entrada->setId($entrada_id);
+            $servicio_entrada->setSello1($sello1);
+            $servicio_entrada->setSello2($sello2);
+            $servicio_entrada->setSello3($sello3);
+
+            $servicio_entrada->updateSellos();
+
             if ($r) {
                 $result = [
                     'error'   => true,
@@ -714,6 +726,7 @@ class serviciosController
                 $servicio = new ServicioEnsacado();
                 $servicio->setId($idServicio);
                 $r = $servicio->finalizarServicio();
+
                 if ($r) {
                     $result = [
                         'error'   => true,
@@ -1088,5 +1101,12 @@ class serviciosController
         $ensacado->getAll('where s.entrada_id = ' . $_GET['id']);
         $cliente = isset($_POST['cliente']) ? $_POST['cliente'] : 'nombre del cliente';
         require_once views_root . 'servicios/assets/formatos/orden_salida.php';
+    }
+
+    public function getCargasPendientes()
+    {
+        $ensacado  = new ServicioEnsacado();
+        $servicios = $ensacado->getCargasPendientes($_POST['id']);
+        echo json_encode(['mensaje' => 'OK', 'cargaspendientes' => $servicios]);
     }
 }

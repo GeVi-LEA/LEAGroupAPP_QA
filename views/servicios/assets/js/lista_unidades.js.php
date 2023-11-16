@@ -192,7 +192,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                           </div>
                                           <div class="form-group row mt-2">
                                                 <div class="col-12 datos mt-2 mb-1">
-                                                      <strong class="mr-1">Peso Cliente:</strong><input type="text" name="pesoCliente" id="pesoCliente" class="item-medium item  numhtml" value="${(servicio.peso_cliente==null)?"":servicio.peso_cliente}" /> 
+                                                      <strong class="mr-1">Peso Cliente:</strong><input type="text" name="pesoCliente" id="pesoCliente" class="item-medium item  numhtml" value="${(servicio.pesoCliente==null)?"":servicio.pesoCliente}" /> 
                                                 </div>
                                           </div>
                                           

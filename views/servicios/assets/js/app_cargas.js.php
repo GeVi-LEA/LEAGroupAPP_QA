@@ -8,33 +8,33 @@
 <script>
 let servicios;
 $(document).ready(function() {
-      console.log("entra en app cargas");
-      getServicios();
-      swal.close();
-      setInterval(() => {
-            getServicios();
-      }, 60000);
+    console.log("entra en app cargas");
+    getServicios();
+    swal.close();
+    setInterval(() => {
+        getServicios();
+    }, 60000);
 });
 
 const getServicios = () => {
-      $("#enviarAlmacenModal1").modal("hide");
-      $.ajax({
-            url: __url__ + "?ajax&controller=Servicios&action=getServCargas",
-            data: {
+    $("#enviarAlmacenModal1").modal("hide");
+    $.ajax({
+        url: __url__ + "?ajax&controller=Servicios&action=getServCargas",
+        data: {
 
-            },
-            method: 'post',
-            dataType: "json",
-      }).then(resp => {
-            servicios = resp.servCargas;
-            let htmlservicios = "";
-            let hopper = "";
-            let inicio = 0;
-            $(".panelunidades").html("");
-            for (var x = 0; x < servicios.length; x++) {
-                  if (servicios[x].hopper != hopper) {
-                        hopper = servicios[x].hopper
-                        htmlservicios += /*html*/ `
+        },
+        method: 'post',
+        dataType: "json",
+    }).then(resp => {
+        servicios = resp.servCargas;
+        let htmlservicios = "";
+        let hopper = "";
+        let inicio = 0;
+        $(".panelunidades").html("");
+        for (var x = 0; x < servicios.length; x++) {
+            if (servicios[x].hopper != hopper) {
+                hopper = servicios[x].hopper
+                htmlservicios += /*html*/ `
                                                 <div class='col '>
                                                             <div class='card sombra'>
                                                                   <div class='card-content'>
@@ -68,8 +68,8 @@ const getServicios = () => {
                                                                                           </div>
                                                                                     </div>                                                                                    
                                           `;
-                  } else {
-                        htmlservicios += /*html*/ `<div class='card servicio ${servicios[x].estatus_operacion}'>
+            } else {
+                htmlservicios += /*html*/ `<div class='card servicio ${servicios[x].estatus_operacion}'>
                                                       <div class='card-content'>
                                                             <div class='card-body p-0'>
                                                                   <h6 class='card-title'><strong>Producto:</strong>${servicios[x].producto} - <strong>Lote:</strong>${servicios[x].lote} - <strong>Almacén:</strong>${(servicios[x].almacen!="")?'<i>'+servicios[x].almacen+'</i>':""} <br /> ${servicios[x].cliente}</h6>
@@ -92,124 +92,124 @@ const getServicios = () => {
                                                       </div>
                                                 </div>
                                                 `;
-                  }
-                  try {
-                        if (servicios[x + 1].hopper != hopper) {
-                              htmlservicios += `                        </div>
+            }
+            try {
+                if (servicios[x + 1].hopper != hopper) {
+                    htmlservicios += `                        </div>
                                                             </div>
                                                       </div>
                                                 </div>
                                           </div>`;
-                        }
-                  } catch (err) {
-                        htmlservicios += `                        </div>
+                }
+            } catch (err) {
+                htmlservicios += `                        </div>
                                      </div>
                                </div>
                          </div>
                    </div>`;
-                  }
-
             }
 
-            $(".panelunidades").html(htmlservicios);
+        }
+
+        $(".panelunidades").html(htmlservicios);
 
 
 
 
-      }).fail(resp => {}).catch(resp => {
-            erpalert("error", 'Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores... ' + resp);
-            console.log("error unidades: ", resp);
-      });
+    }).fail(resp => {}).catch(resp => {
+        erpalert("error", 'Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores... ' + resp);
+        console.log("error unidades: ", resp);
+    });
 }
 
 let servicio;
 const accionEtapa = (idserv) => {
-      let idEtapa = $("#idEtapa").val();
-      console.log("idEtapa: ", idEtapa);
-      console.log("idserv: ", idserv);
-      switch (idEtapa) {
-            case "1":
-                  Swal.fire({
-                        title: '¿Seguro que cambiará la unidad a transito?',
-                        text: "",
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Si'
-                  }).then((result) => {
-                        if (result.isConfirmed) {
-                              $.ajax({
-                                    data: {
-                                          id: idserv
-                                    },
-                                    url: __url__ + "?ajax&controller=Servicios&action=transitoUnidad",
-                                    type: "POST",
-                                    dataType: "json",
-                                    success: function(r) {
-                                          console.log(r);
-                                          if (r.error != false) {
-                                                erpalert("", "", "Se cambió el estatus de la unidad");
-                                                setTimeout(() => {
-                                                      getUnidades();
-                                                }, 500);
-                                          } else {
-                                                erpalert("error", "Ocurrió un error", r.mensaje);
-                                          }
-                                    },
-                                    error: function(r) {
-                                          console.log(r.responseText);
-                                          mensajeError("Algo salio mal,  contacte al administrador.");
-                                    },
-                              });
-
-
-
-
-
-
-                        }
-                  });
-                  break;
-            case "8":
-                  servicio = servicios.find(function(e) {
-                        return e.id === idserv;
-                  });;
-                  jQuery.ajax({
-                        url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+    let idEtapa = $("#idEtapa").val();
+    console.log("idEtapa: ", idEtapa);
+    console.log("idserv: ", idserv);
+    switch (idEtapa) {
+        case "1":
+            Swal.fire({
+                title: '¿Seguro que cambiará la unidad a transito?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
                         data: {
-
+                            id: idserv
                         },
-                        method: 'POST',
+                        url: __url__ + "?ajax&controller=Servicios&action=transitoUnidad",
+                        type: "POST",
                         dataType: "json",
-                  }).then(resp => {
-                        clientes = resp.clientes;
-                        transportes = resp.transportes;
-                        htmlclientes = `<strong class="mr-1">Cliente:</strong>
+                        success: function(r) {
+                            console.log(r);
+                            if (r.error != false) {
+                                erpalert("", "", "Se cambió el estatus de la unidad");
+                                setTimeout(() => {
+                                    getUnidades();
+                                }, 500);
+                            } else {
+                                erpalert("error", "Ocurrió un error", r.mensaje);
+                            }
+                        },
+                        error: function(r) {
+                            console.log(r.responseText);
+                            mensajeError("Algo salio mal,  contacte al administrador.");
+                        },
+                    });
+
+
+
+
+
+
+                }
+            });
+            break;
+        case "8":
+            servicio = servicios.find(function(e) {
+                return e.id === idserv;
+            });;
+            jQuery.ajax({
+                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                data: {
+
+                },
+                method: 'POST',
+                dataType: "json",
+            }).then(resp => {
+                clientes = resp.clientes;
+                transportes = resp.transportes;
+                htmlclientes = `<strong class="mr-1">Cliente:</strong>
                                           <select name="cliente" class="item" id="cliente">
                                                 <option value="" selected>--Selecciona--</option>`;
-                        for (var x = 0; x < clientes.length; x++) {
-                              htmlclientes += `<option value="${clientes[x].id}" ${(clientes[x].id==servicio.cliente_id)?"selected":""}>${clientes[x].nombre} </option>`
-                        }
+                for (var x = 0; x < clientes.length; x++) {
+                    htmlclientes += `<option value="${clientes[x].id}" ${(clientes[x].id==servicio.cliente_id)?"selected":""}>${clientes[x].nombre} </option>`
+                }
 
-                        htmlclientes += `</select>`;
+                htmlclientes += `</select>`;
 
-                        htmltransportes = `<strong class="mr-1">Transporte:</strong>
+                htmltransportes = `<strong class="mr-1">Transporte:</strong>
                                           <select name="transporte" class="item" id="transporte">
                                                 <option value="" selected>--Selecciona--</option>`;
-                        for (var x = 0; x < transportes.length; x++) {
-                              htmltransportes += `<option value="${transportes[x].id}" ${(transportes[x].id==servicio.tipo_transporte_id)?"selected":""}>${transportes[x].nombre} </option>`
-                        }
+                for (var x = 0; x < transportes.length; x++) {
+                    htmltransportes += `<option value="${transportes[x].id}" ${(transportes[x].id==servicio.tipo_transporte_id)?"selected":""}>${transportes[x].nombre} </option>`
+                }
 
-                        htmltransportes += `</select>`;
+                htmltransportes += `</select>`;
 
-                        Swal.fire({
-                              title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Ingreso de unidades</span>`,
-                              confirmButtonText: 'Guardar',
-                              cancelButtonText: 'Cancelar',
-                              showCancelButton: true,
-                              cancelButtonColor: '#d33',
-                              html: /*html*/ `
+                Swal.fire({
+                    title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Ingreso de unidades</span>`,
+                    confirmButtonText: 'Guardar',
+                    cancelButtonText: 'Cancelar',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    html: /*html*/ `
                         
                               <section id="sectionForm">
                                     <form id="ensacadoForm" enctype="multipart/form-data" class="form form-horizontal">
@@ -276,120 +276,120 @@ const accionEtapa = (idserv) => {
                                           
                                           </form>
                               </section>`,
-                              preConfirm: () => {
-                                    if (validaCampos()) {
-                                          erpalert("error", "", "Validar campor obligatorios")
-                                          return false; // Prevent confirmed
-                                    }
-                              },
-                              didOpen: () => {
-                                    let tipoferre = "A";
-                                    if (servicio.tipo_transporte_id == 6 || servicio.tipo_transporte_id == 12) {
-                                          tipoferre = "F";
-                                    }
-                                    cambiaFerrotolva(tipoferre);
+                    preConfirm: () => {
+                        if (validaCampos()) {
+                            erpalert("error", "", "Validar campor obligatorios")
+                            return false; // Prevent confirmed
+                        }
+                    },
+                    didOpen: () => {
+                        let tipoferre = "A";
+                        if (servicio.tipo_transporte_id == 6 || servicio.tipo_transporte_id == 12) {
+                            tipoferre = "F";
+                        }
+                        cambiaFerrotolva(tipoferre);
 
-                              }
-                        }).then((result) => {
-                              if (result.isConfirmed) {
-                                    $("#ensacadoForm").find("input, select").removeAttr("disabled");
-                                    var datosForm = new FormData($("#ensacadoForm")[0]);
-                                    console.log(datosForm);
-                                    jQuery.ajax({
-                                          url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
-                                          data: datosForm,
-                                          processData: false,
-                                          contentType: false,
-                                          enctype: "multipart/form-data",
-                                          method: 'post',
-                                          dataType: "json",
-                                    }).then(resp => {
-                                          console.log(resp);
-                                          if (resp.error) {
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#ensacadoForm").find("input, select").removeAttr("disabled");
+                        var datosForm = new FormData($("#ensacadoForm")[0]);
+                        console.log(datosForm);
+                        jQuery.ajax({
+                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            data: datosForm,
+                            processData: false,
+                            contentType: false,
+                            enctype: "multipart/form-data",
+                            method: 'post',
+                            dataType: "json",
+                        }).then(resp => {
+                            console.log(resp);
+                            if (resp.error) {
 
-                                                $.ajax({
-                                                      data: {
-                                                            id: servicio.id
-                                                      },
-                                                      url: __url__ + "?ajax&controller=Servicios&action=ingresarUnidad",
-                                                      type: "POST",
-                                                      dataType: "json",
-                                                      success: function(r) {
-                                                            console.log(r);
-                                                            if (r.error != false) {
-                                                                  erpalert("", "Entrada", r.mensaje);
-                                                            } else {
-                                                                  erpalert("error", "Entrada", r.mensaje);
-                                                                  mensajeError(r.mensaje);
-                                                            }
-                                                            setTimeout(() => {
-                                                                  getUnidades();
-                                                            }, 500);
-                                                      },
-                                                      error: function(r) {
-                                                            console.log(r.responseText);
-                                                            mensajeError("Algo salio mal,  contacte al administrador.");
-                                                      },
-                                                });
-                                          } else {
-                                                erpalert("error", "Error", resp.mensaje)
-                                                mensajeError(resp.mensaje);
-                                          }
-                                    }).fail(resp => {}).catch(resp => {
-                                          swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                                                icon: 'error'
-                                          });
-                                    });
-                              }
+                                $.ajax({
+                                    data: {
+                                        id: servicio.id
+                                    },
+                                    url: __url__ + "?ajax&controller=Servicios&action=ingresarUnidad",
+                                    type: "POST",
+                                    dataType: "json",
+                                    success: function(r) {
+                                        console.log(r);
+                                        if (r.error != false) {
+                                            erpalert("", "Entrada", r.mensaje);
+                                        } else {
+                                            erpalert("error", "Entrada", r.mensaje);
+                                            mensajeError(r.mensaje);
+                                        }
+                                        setTimeout(() => {
+                                            getUnidades();
+                                        }, 500);
+                                    },
+                                    error: function(r) {
+                                        console.log(r.responseText);
+                                        mensajeError("Algo salio mal,  contacte al administrador.");
+                                    },
+                                });
+                            } else {
+                                erpalert("error", "Error", resp.mensaje)
+                                mensajeError(resp.mensaje);
+                            }
+                        }).fail(resp => {}).catch(resp => {
+                            swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                                icon: 'error'
+                            });
                         });
+                    }
+                });
 
-                  }).fail(resp => {}).catch(resp => {
-                        swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                              icon: 'error'
-                        });
-                  });
+            }).fail(resp => {}).catch(resp => {
+                swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                    icon: 'error'
+                });
+            });
 
 
-                  break;
-            case "11":
-                  servicio = servicios.find(function(e) {
-                        return e.id === idserv;
-                  });;
-                  jQuery.ajax({
-                        url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
-                        data: {
+            break;
+        case "11":
+            servicio = servicios.find(function(e) {
+                return e.id === idserv;
+            });;
+            jQuery.ajax({
+                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                data: {
 
-                        },
-                        method: 'POST',
-                        dataType: "json",
-                  }).then(resp => {
-                        clientes = resp.clientes;
-                        transportes = resp.transportes;
-                        htmlclientes = `<strong class="mr-1">Cliente:</strong>
+                },
+                method: 'POST',
+                dataType: "json",
+            }).then(resp => {
+                clientes = resp.clientes;
+                transportes = resp.transportes;
+                htmlclientes = `<strong class="mr-1">Cliente:</strong>
                                           <select name="cliente" class="item" id="cliente" disabled>
                                                 <option value="" selected>--Selecciona--</option>`;
-                        for (var x = 0; x < clientes.length; x++) {
-                              htmlclientes += `<option value="${clientes[x].id}" ${(clientes[x].id==servicio.cliente_id)?"selected":""}>${clientes[x].nombre} </option>`
-                        }
+                for (var x = 0; x < clientes.length; x++) {
+                    htmlclientes += `<option value="${clientes[x].id}" ${(clientes[x].id==servicio.cliente_id)?"selected":""}>${clientes[x].nombre} </option>`
+                }
 
-                        htmlclientes += `</select>`;
+                htmlclientes += `</select>`;
 
-                        htmltransportes = `<strong class="mr-1">Transporte:</strong>
+                htmltransportes = `<strong class="mr-1">Transporte:</strong>
                                           <select name="transporte" class="item" id="transporte" disabled>
                                                 <option value="" selected>--Selecciona--</option>`;
-                        for (var x = 0; x < transportes.length; x++) {
-                              htmltransportes += `<option value="${transportes[x].id}" ${(transportes[x].id==servicio.tipo_transporte_id)?"selected":""}>${transportes[x].nombre} </option>`
-                        }
+                for (var x = 0; x < transportes.length; x++) {
+                    htmltransportes += `<option value="${transportes[x].id}" ${(transportes[x].id==servicio.tipo_transporte_id)?"selected":""}>${transportes[x].nombre} </option>`
+                }
 
-                        htmltransportes += `</select>`;
+                htmltransportes += `</select>`;
 
-                        Swal.fire({
-                              title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Servicio de Báscula</span>`,
-                              confirmButtonText: 'Guardar',
-                              cancelButtonText: 'Cancelar',
-                              showCancelButton: true,
-                              cancelButtonColor: '#d33',
-                              html: /*html*/ `
+                Swal.fire({
+                    title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Servicio de Báscula</span>`,
+                    confirmButtonText: 'Guardar',
+                    cancelButtonText: 'Cancelar',
+                    showCancelButton: true,
+                    cancelButtonColor: '#d33',
+                    html: /*html*/ `
                         
                               <section id="sectionForm">
                                     <form id="ensacadoForm" enctype="multipart/form-data" class="form form-horizontal">
@@ -499,240 +499,344 @@ const accionEtapa = (idserv) => {
                                           
                                           </form>
                               </section>`,
-                              preConfirm: () => {
-                                    if (validaCampos()) {
-                                          erpalert("error", "", "Validar campor obligatorios")
-                                          return false; // Prevent confirmed
-                                    }
-                              },
-                              didOpen: () => {
-                                    let tipoferre = "A";
-                                    if (servicio.tipo_transporte_id == 6 || servicio.tipo_transporte_id == 12) {
-                                          tipoferre = "F";
-                                    }
-                                    cambiaFerrotolva(tipoferre);
-                                    $("#ticket, #tara").change(function() {
-                                          getPesos();
-                                    });
-
-
-                              }
-                        }).then((result) => {
-                              if (result.isConfirmed) {
-                                    $("#ensacadoForm").find("input, select").removeAttr("disabled");
-                                    var datosForm = new FormData($("#ensacadoForm")[0]);
-                                    console.log(datosForm);
-                                    jQuery.ajax({
-                                          url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
-                                          data: datosForm,
-                                          processData: false,
-                                          contentType: false,
-                                          enctype: "multipart/form-data",
-                                          method: 'post',
-                                          dataType: "json",
-                                    }).then(resp => {
-                                          console.log(resp);
-                                          if (resp.error) {
-                                                erpalert("", "Báscula", resp.mensaje);
-
-                                          } else {
-                                                erpalert("error", "Error", resp.mensaje)
-                                                mensajeError(resp.mensaje);
-                                          }
-                                          getUnidades();
-                                    }).fail(resp => {}).catch(resp => {
-                                          swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                                                icon: 'error'
-                                          });
-                                    });
-                              }
+                    preConfirm: () => {
+                        if (validaCampos()) {
+                            erpalert("error", "", "Validar campor obligatorios")
+                            return false; // Prevent confirmed
+                        }
+                    },
+                    didOpen: () => {
+                        let tipoferre = "A";
+                        if (servicio.tipo_transporte_id == 6 || servicio.tipo_transporte_id == 12) {
+                            tipoferre = "F";
+                        }
+                        cambiaFerrotolva(tipoferre);
+                        $("#ticket, #tara").change(function() {
+                            getPesos();
                         });
 
-                  }).fail(resp => {}).catch(resp => {
-                        swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                              icon: 'error'
-                        });
-                  });
 
-                  break;
-            default:
-                  break;
-      }
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $("#ensacadoForm").find("input, select").removeAttr("disabled");
+                        var datosForm = new FormData($("#ensacadoForm")[0]);
+                        console.log(datosForm);
+                        jQuery.ajax({
+                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            data: datosForm,
+                            processData: false,
+                            contentType: false,
+                            enctype: "multipart/form-data",
+                            method: 'post',
+                            dataType: "json",
+                        }).then(resp => {
+                            console.log(resp);
+                            if (resp.error) {
+                                erpalert("", "Báscula", resp.mensaje);
+
+                            } else {
+                                erpalert("error", "Error", resp.mensaje)
+                                mensajeError(resp.mensaje);
+                            }
+                            getUnidades();
+                        }).fail(resp => {}).catch(resp => {
+                            swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                                icon: 'error'
+                            });
+                        });
+                    }
+                });
+
+            }).fail(resp => {}).catch(resp => {
+                swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                    icon: 'error'
+                });
+            });
+
+            break;
+        default:
+            break;
+    }
 
 }
 
 function padTo2Digits(num) {
-      return num.toString().padStart(2, "0");
+    return num.toString().padStart(2, "0");
 }
 
 function formatDate(date) {
-      return (
-            [
-                  date.getFullYear(),
-                  padTo2Digits(date.getMonth() + 1),
-                  padTo2Digits(date.getDate()),
-            ].join("/") +
-            " " + [
-                  padTo2Digits(date.getHours()),
-                  padTo2Digits(date.getMinutes()),
-                  padTo2Digits(date.getSeconds()),
-            ].join(":")
-      );
+    return (
+        [
+            date.getFullYear(),
+            padTo2Digits(date.getMonth() + 1),
+            padTo2Digits(date.getDate()),
+        ].join("/") +
+        " " + [
+            padTo2Digits(date.getHours()),
+            padTo2Digits(date.getMinutes()),
+            padTo2Digits(date.getSeconds()),
+        ].join(":")
+    );
 }
 const validaCampos = () => {
-      let faltan = false;
-      $("#pesoCliente").removeClass("invalid").removeClass("checked");
-      if ($("#pesoCliente").val() == "") {
+    let faltan = false;
+    $("#pesoCliente").removeClass("invalid").removeClass("checked");
+    if ($("#pesoCliente").val() == "") {
+        faltan = true;
+        $("#pesoCliente").addClass("invalid");
+    } else {
+        $("#pesoCliente").addClass("checked");
+    }
+    $("#cliente").removeClass("invalid").removeClass("checked");
+    if ($("#cliente").val() == "") {
+        faltan = true;
+        $("#cliente").addClass("invalid");
+    } else {
+        $("#cliente").addClass("checked");
+    }
+
+    if ($("#transporteTren").is(":visible")) {
+        $("#transporteTren").removeClass("invalid").removeClass("checked");
+        if ($("#transporteTren").val() == "") {
             faltan = true;
-            $("#pesoCliente").addClass("invalid");
-      } else {
-            $("#pesoCliente").addClass("checked");
-      }
-      $("#cliente").removeClass("invalid").removeClass("checked");
-      if ($("#cliente").val() == "") {
+            $("#transporteTren").addClass("invalid");
+        } else {
+            $("#transporteTren").addClass("checked");
+        }
+    }
+
+    if ($("#transporte").is(":visible")) {
+        $("#transporte").removeClass("invalid").removeClass("checked");
+        if ($("#transporte").val() == "") {
             faltan = true;
-            $("#cliente").addClass("invalid");
-      } else {
-            $("#cliente").addClass("checked");
-      }
+            $("#transporte").addClass("invalid");
+        } else {
+            $("#transporte").addClass("checked");
+        }
+    }
 
-      if ($("#transporteTren").is(":visible")) {
-            $("#transporteTren").removeClass("invalid").removeClass("checked");
-            if ($("#transporteTren").val() == "") {
-                  faltan = true;
-                  $("#transporteTren").addClass("invalid");
-            } else {
-                  $("#transporteTren").addClass("checked");
-            }
-      }
-
-      if ($("#transporte").is(":visible")) {
-            $("#transporte").removeClass("invalid").removeClass("checked");
-            if ($("#transporte").val() == "") {
-                  faltan = true;
-                  $("#transporte").addClass("invalid");
-            } else {
-                  $("#transporte").addClass("checked");
-            }
-      }
-
-      // transportista
-      if ($("#transportista").is(":visible")) {
-            $("#transportista").removeClass("invalid").removeClass("checked");
-            if ($("#transportista").val() == "") {
-                  faltan = true;
-                  $("#transportista").addClass("invalid");
-            } else {
-                  $("#transportista").addClass("checked");
-            }
-      }
-      // $("#cliente").val()
-      return faltan;
+    // transportista
+    if ($("#transportista").is(":visible")) {
+        $("#transportista").removeClass("invalid").removeClass("checked");
+        if ($("#transportista").val() == "") {
+            faltan = true;
+            $("#transportista").addClass("invalid");
+        } else {
+            $("#transportista").addClass("checked");
+        }
+    }
+    // $("#cliente").val()
+    return faltan;
 }
 
 function iniciarServicio(id) {
-      console.log(id);
-      $.confirm({
-            title: "<span class='material-icons i-warning'>warning</span><span>¡Atención!<span>",
-            content: "<b>¿Iniciar servicio?</b>",
-            type: "orange",
-            typeAnimated: true,
-            animation: "zoom",
-            closeAnimation: "right",
-            backgroundDismiss: false,
-            backgroundDismissAnimation: "shake",
-            buttons: {
-                  tryAgain: {
-                        text: "Iniciar servicio",
-                        btnClass: "btn btn-warning",
-                        action: function() {
-                              $.ajax({
-                                    data: {
-                                          id: id
-                                    },
-                                    url: __url__ + "?ajax&controller=Servicios&action=iniciarServicio",
-                                    type: "POST",
-                                    dataType: "json",
-                                    success: function(r) {
-                                          console.log(r);
-                                          if (r != false) {
-                                                erpalert("", "", r.mensaje);
-                                          } else {
-                                                erpalert("error", "Error", r.mensaje);
-                                          }
-                                          getServicios();
-                                    },
-                                    error: function(r) {
-                                          console.log(r.responseText);
-                                          mensajeError("Algo salio mal,  contacte al administrador.");
-                                    },
-                              });
+    console.log(id);
+    $.confirm({
+        title: "<span class='material-icons i-warning'>warning</span><span>¡Atención!<span>",
+        content: "<b>¿Iniciar servicio?</b>",
+        type: "orange",
+        typeAnimated: true,
+        animation: "zoom",
+        closeAnimation: "right",
+        backgroundDismiss: false,
+        backgroundDismissAnimation: "shake",
+        buttons: {
+            tryAgain: {
+                text: "Iniciar servicio",
+                btnClass: "btn btn-warning",
+                action: function() {
+                    $.ajax({
+                        data: {
+                            id: id
                         },
-                  },
-
-                  Cancelar: function() {},
+                        url: __url__ + "?ajax&controller=Servicios&action=iniciarServicio",
+                        type: "POST",
+                        dataType: "json",
+                        success: function(r) {
+                            console.log(r);
+                            if (r != false) {
+                                erpalert("", "", r.mensaje);
+                            } else {
+                                erpalert("error", "Error", r.mensaje);
+                            }
+                            getServicios();
+                        },
+                        error: function(r) {
+                            console.log(r.responseText);
+                            mensajeError("Algo salio mal,  contacte al administrador.");
+                        },
+                    });
+                },
             },
-      });
+
+            Cancelar: function() {},
+        },
+    });
 }
 
 function detenerServicio(id, almacen_id = "1") {
-      var form = $("#formEnviarAlmacen");
-      var select = $(form).find("#selectAlmacen");
-      $.ajax({
-            url: __url__ + "?ajax&controller=Catalogo&action=getAlmacenes",
-            type: "POST",
-            dataType: "json",
-            success: function(r) {
-                  console.log(r);
-                  if (r != false) {
-                        select.find("option").not(":first").remove();
-                        if (r.length != 0) {
-                              $(r).each(function(i, v) {
-                                    // indice, valor
-                                    select.append(
-                                          '<option value="' + v.id + '">' + v.nombre + "</option>"
-                                    );
-                              });
-                        } else {
-                              select.append(
-                                    '<option value="" disabled>No hay almacenes registrados</option>'
-                              );
-                        }
-                  }
-            },
-            error: function() {
-                  alert("Algo salio mal, contacte al Administrador.");
-            },
-      });
-      $("#idServicioEnviar").val(id);
-      $(form).find(id);
-      $(form).find($("#operacionEnviar")).val("S");
-      // $("#enviarAlmacenModal1").modal("show");
-      // $("#enviarFinalizarServicio").unbind();
-      // $("#enviarFinalizarServicio").click(function() {
-      // if (validarDatosEnviarAlmacen()) {
-      let servicio = servicios.filter(el => el.id_servicio == id)[0];
-      $.confirm({
-            title: "<span class='material-icons i-warning'>warning</span><span>¡Atención!<span>",
-            content: "<b>¿Finalizar servicio?</b>",
-            type: "orange",
-            typeAnimated: true,
-            animation: "zoom",
-            closeAnimation: "right",
-            backgroundDismiss: false,
-            backgroundDismissAnimation: "shake",
-            buttons: {
-                  tryAgain: {
-                        text: "Finalizar servicio",
-                        btnClass: "btn btn-warning",
-                        action: function() {
-                              $.ajax({
+    var form = $("#formEnviarAlmacen");
+    var select = $(form).find("#selectAlmacen");
+    $.ajax({
+        url: __url__ + "?ajax&controller=Catalogo&action=getAlmacenes",
+        type: "POST",
+        dataType: "json",
+        success: function(r) {
+            console.log(r);
+            if (r != false) {
+                select.find("option").not(":first").remove();
+                if (r.length != 0) {
+                    $(r).each(function(i, v) {
+                        // indice, valor
+                        select.append(
+                            '<option value="' + v.id + '">' + v.nombre + "</option>"
+                        );
+                    });
+                } else {
+                    select.append(
+                        '<option value="" disabled>No hay almacenes registrados</option>'
+                    );
+                }
+            }
+        },
+        error: function() {
+            alert("Algo salio mal, contacte al Administrador.");
+        },
+    });
+    $("#idServicioEnviar").val(id);
+    $(form).find(id);
+    $(form).find($("#operacionEnviar")).val("S");
+    //OBTIENE LOS SERVICIOS PENDIENTES
+
+    var cargaspendientes;
+    var espera = 1;
+    $.ajax({
+        // data: $("#formEnviarAlmacen").serialize(),
+        data: {
+            id: id,
+        },
+        url: "?ajax&controller=Servicios&action=getCargasPendientes",
+        type: "POST",
+        dataType: "json",
+        success: function(r) {
+            console.log(r);
+            cargaspendientes = r;
+            let servicio = servicios.filter(el => el.id_servicio == id)[0];
+            console.log(servicio);
+            if (cargaspendientes.cargaspendientes[0].pendientes == "1") {
+                var html = `
+                        <div class='row'>
+                            <div class='col-11'>
+                                <h3>Favor de ingresar los sellos de la caja</h3>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-11'>
+
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Sello 1</div>
+                                    <input type="text" name="sello1" class=" form-control" id="sello1" required />
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-11'>
+
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Sello 2</div>
+                                    <input type="text" name="sello2" class=" form-control" id="sello2" />
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col-11'>
+
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Sello 3</div>
+                                    <input type="text" name="sello3" class=" form-control" id="sello3" />
+                                </div>
+
+                            </div>
+                        </div>
+                    `;
+                Swal.fire({
+                    title: "Servicios terminados",
+                    html: html,
+                    showDenyButton: true,
+                    confirmButtonText: "Terminar",
+                    denyButtonText: `Cancelar`
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            // data: $("#formEnviarAlmacen").serialize(),
+                            data: {
+                                idServicioEnviar: id,
+                                operacionEnviar: "S",
+                                cantidadAlmacen: servicio.kilos.replace(",", ""),
+                                almacen: almacen_id,
+                                entrada_id: servicio.entrada_id,
+                                sello1: $(".swal2-html-container #sello1").val(),
+                                sello2: $(".swal2-html-container #sello2").val(),
+                                sello3: $(".swal2-html-container #sello3").val(),
+
+
+                            },
+                            url: "?ajax&controller=Servicios&action=finalizarServicio",
+                            type: "POST",
+                            dataType: "json",
+                            success: function(r) {
+                                console.log(r);
+                                if (r.error != false) {
+                                    erpalert("", "", r.mensaje);
+                                } else {
+                                    erpalert("error", "Error", r.mensaje);
+                                }
+                                getServicios();
+                            },
+                            error: function(r) {
+                                console.log(r.responseText);
+                                mensajeError("Algo salio mal,  contacte al administrador.");
+                            },
+                        });
+                    } else if (result.isDenied) {
+
+                    }
+                });
+
+            } else {
+
+
+                // $("#enviarAlmacenModal1").modal("show");
+                // $("#enviarFinalizarServicio").unbind();
+                // $("#enviarFinalizarServicio").click(function() {
+                // if (validarDatosEnviarAlmacen()) {
+
+                $.confirm({
+                    title: "<span class='material-icons i-warning'>warning</span><span>¡Atención!<span>",
+                    content: "<b>¿Finalizar servicio?</b>",
+                    type: "orange",
+                    typeAnimated: true,
+                    animation: "zoom",
+                    closeAnimation: "right",
+                    backgroundDismiss: false,
+                    backgroundDismissAnimation: "shake",
+                    buttons: {
+                        tryAgain: {
+                            text: "Finalizar servicio",
+                            btnClass: "btn btn-warning",
+                            action: function() {
+                                $.ajax({
                                     // data: $("#formEnviarAlmacen").serialize(),
                                     data: {
-                                          idServicioEnviar: id,
-                                          operacionEnviar: "S",
-                                          cantidadAlmacen: servicio.kilos.replace(",", ""),
-                                          almacen: almacen_id,
+                                        idServicioEnviar: id,
+                                        operacionEnviar: "S",
+                                        cantidadAlmacen: servicio.kilos.replace(",", ""),
+                                        almacen: almacen_id,
 
 
                                     },
@@ -740,43 +844,57 @@ function detenerServicio(id, almacen_id = "1") {
                                     type: "POST",
                                     dataType: "json",
                                     success: function(r) {
-                                          console.log(r);
-                                          if (r.error != false) {
-                                                erpalert("", "", r.mensaje);
-                                          } else {
-                                                erpalert("error", "Error", r.mensaje);
-                                          }
-                                          getServicios();
+                                        console.log(r);
+                                        if (r.error != false) {
+                                            erpalert("", "", r.mensaje);
+                                        } else {
+                                            erpalert("error", "Error", r.mensaje);
+                                        }
+                                        getServicios();
                                     },
                                     error: function(r) {
-                                          console.log(r.responseText);
-                                          mensajeError("Algo salio mal,  contacte al administrador.");
+                                        console.log(r.responseText);
+                                        mensajeError("Algo salio mal,  contacte al administrador.");
                                     },
-                              });
+                                });
+                            },
                         },
-                  },
-                  Cancelar: function() {},
-            },
-      });
-      // } else {
-      // erpalert("error", "", "No puede estar un campo vacio.");
-      // }
-      // });
+                        Cancelar: function() {},
+                    },
+                });
+            }
+
+        },
+        error: function(r) {
+            console.log(r.responseText);
+            espera = 0;
+            mensajeError("Algo salio mal,  contacte al administrador.");
+        },
+    });
+
+
+
+
+
+    // } else {
+    // erpalert("error", "", "No puede estar un campo vacio.");
+    // }
+    // });
 }
 
 
 function validarDatosEnviarAlmacen() {
-      var form = $("#formEnviarAlmacen");
-      var inputs = $(form).find("input, select");
-      var valid = true;
-      inputs.each(function() {
-            console.log($(this));
-            if ($(this).val() == null || $(this).val() == "") {
-                  $(this).addClass("required");
-                  valid = false;
-                  console.log(this);
-            }
-      });
-      return valid;
+    var form = $("#formEnviarAlmacen");
+    var inputs = $(form).find("input, select");
+    var valid = true;
+    inputs.each(function() {
+        console.log($(this));
+        if ($(this).val() == null || $(this).val() == "") {
+            $(this).addClass("required");
+            valid = false;
+            console.log(this);
+        }
+    });
+    return valid;
 }
 </script>

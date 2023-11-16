@@ -288,17 +288,23 @@ class ServicioEntrada
     public function getAll($where = null)
     {
         $result = array();
-        $sql = 'select se.*, CEIL(se.peso_tara * 0.453592) as pesoTaraKg, c.nombre as nombreCliente, es.clave as clave, es.nombre as estatus, '
-            . 'se.peso_cliente as pesoCliente, CEIL(se.peso_cliente * .003) as tolerable, (se.peso_teorico - se.peso_cliente) as diferenciaTeorica, '
-            . 'TIMESTAMPDIFF(MINUTE, se.fecha_entrada, if(se.fecha_salida is null, now(), se.fecha_salida)) as tiempoTranscurrido '
-            . ', case '
-            . '    when tipo_transporte_id = 6 or tipo_transporte_id = 12 then concat(\'<span id="showEnsacado" data-idserv="\',se.id,\'" class="showEnsacado material-icons i-recibir">directions_subway</span>\')  '
-            . '    else concat(\'<span id ="showEnsacado"  data-idserv="\',se.id,\'" class = " showEnsacado material-icons i-recibir">local_shipping</span>\') '
-            . '    end as iconounidad 
-                        , c.direccion direccion_cliente '
-            . ' from servicios_entradas se  '
-            . ' inner join catalogo_estatus es on es.id = se.estatus_id '
-            . ' inner join catalogo_clientes c on c.id = se.cliente_id ';
+        $sql    = 'select se.*
+                , CEIL(se.peso_tara * 0.453592) as pesoTaraKg
+                , c.nombre as nombreCliente
+                , es.clave as clave
+                , es.nombre as estatus
+                ,  ROUND(se.peso_cliente,2) as pesoCliente
+                , CEIL(se.peso_cliente * .003) as tolerable
+                , (se.peso_teorico - se.peso_cliente) as diferenciaTeorica
+                , TIMESTAMPDIFF(MINUTE, se.fecha_entrada, if(se.fecha_salida is null, now(), se.fecha_salida)) as tiempoTranscurrido
+                , case
+                    when tipo_transporte_id = 6 or tipo_transporte_id = 12 then concat(\'<span id="showEnsacado" data-idserv="\',se.id,\'" class="showEnsacado material-icons i-recibir">directions_subway</span>\')
+                    else concat(\'<span id ="showEnsacado"  data-idserv="\',se.id,\'" class = " showEnsacado material-icons i-recibir">local_shipping</span>\') 
+                    end as iconounidad 
+                , c.direccion direccion_cliente 
+                from servicios_entradas se  
+                inner join catalogo_estatus es on es.id = se.estatus_id 
+                inner join catalogo_clientes c on c.id = se.cliente_id ';
 
         if ($where != null) {
             $sql .= $where;
@@ -495,6 +501,23 @@ class ServicioEntrada
             foreach ($ensacados->fetch_all(MYSQLI_ASSOC) as $e) {
                 array_push($result, $e);
             }
+        }
+        return $result;
+    }
+
+    public function updateSellos()
+    {
+        $sql    = "update servicios_entradas set 
+        sello1 = '{$this->getSello1()}'
+        , sello2 = '{$this->getSello2()}'
+        , sello3 = '{$this->getSello3()}'
+        where id = {$this->getId()}";
+        $save   = $this->db->query($sql);
+        $result = false;
+        if ($save) {
+            $result = true;
+        } else {
+            $result = false;
         }
         return $result;
     }
