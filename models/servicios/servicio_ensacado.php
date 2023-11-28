@@ -415,11 +415,11 @@ class ServicioEnsacado
     {
         $sql    = "update servicios_ensacado 
                 set barredura_limpia = '{$this->getBarreduraLimpia()}'
-                ,barredura_sucia = '{$this->getBarreduraSucia()}'
-                ,total_ensacado = '{$this->getTotalEnsacado()}' 
-                ,tarimas = '{$this->getTarimas()}' 
-                ,bultos = '{$this->getBultos()}' 
-                ,parcial = '{$this->getParcial()}' 
+                , barredura_sucia = '{$this->getBarreduraSucia()}'
+                , total_ensacado = '{$this->getTotalEnsacado()}' 
+                , tarimas = '{$this->getTarimas()}' 
+                , bultos = '{$this->getBultos()}' 
+                , parcial = " . (is_null($this->getParcial()) ? '0' : $this->getParcial()) . " 
                 where id={$this->getId()}";
         $save   = $this->db->query($sql);
         $result = false;
@@ -431,8 +431,20 @@ class ServicioEnsacado
 
     public function finalizarServicio()
     {
-        $sql    = "update servicios_ensacado set fecha_fin = NOW(), estatus_id = 5 , usuario_inicio = {$_SESSION['usuario']->id} where id={$this->getId()}";
-        $save   = $this->db->query($sql);
+        $sql  = "update servicios_ensacado set 
+                fecha_fin = NOW()
+                , estatus_id = 5 
+                , usuario_fin = {$_SESSION['usuario']->id} 
+                where id={$this->getId()}";
+        $save = $this->db->query($sql);
+        $sql  = "
+            update servicios_entradas
+            set estatus_id = 3
+            where id = (select entrada_id from servicios_ensacado where id = {$this->getId()})
+            ;
+        ";
+        $save = $this->db->query($sql);
+
         $result = false;
         if ($save) {
             $result = true;

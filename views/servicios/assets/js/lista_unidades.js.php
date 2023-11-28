@@ -75,6 +75,8 @@ const getUnidades = () => {
 }
 
 let servicio;
+var clickiframe;
+
 const accionEtapa = (idserv, tipoUnidad) => {
     let idEtapa = $("#idEtapa").val();
     console.log("idEtapa: ", idEtapa);
@@ -139,6 +141,9 @@ const accionEtapa = (idserv, tipoUnidad) => {
             }).then(resp => {
                 clientes = resp.clientes;
                 transportes = resp.transportes;
+                cat_transportistas = resp.cat_transportistas;
+                cat_choferes = resp.cat_choferes;
+
                 htmlclientes = `<strong class="mr-1">Cliente:</strong>
                                           <select name="cliente" class="item" id="cliente">
                                                 <option value="" selected>--Selecciona--</option>`;
@@ -156,6 +161,22 @@ const accionEtapa = (idserv, tipoUnidad) => {
                 }
 
                 htmltransportes += `</select>`;
+
+                htmltransportistas = `
+                  <select name="transportista" class="item" id="transportista">
+                        <option value="" selected>--Selecciona--</option>`;
+                for (var x = 0; x < cat_transportistas.length; x++) {
+                    htmltransportistas += `<option value="${cat_transportistas[x].id}" ${(servicio.transportista == cat_transportistas[x].id) ?"selected":""}>${cat_transportistas[x].nombre} </option>`
+                }
+                htmltransportistas += `</select>`;
+
+                htmlchoferes = `
+                  <select name="chofer" class="item" id="chofer">
+                        <option value="" selected>--Selecciona--</option>`;
+                for (var x = 0; x < cat_choferes.length; x++) {
+                    htmlchoferes += `<option value="${cat_choferes[x].chof_id}" ${(servicio.chofer = cat_choferes[x].chof_id) ?"selected":""}>${cat_choferes[x].chof_nombre} </option>`
+                }
+                htmlchoferes += `</select>`;
 
                 Swal.fire({
                     title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Ingreso de unidades</span>`,
@@ -192,7 +213,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                           </div>
                                           <div class="form-group row mt-2">
                                                 <div class="col-12 datos mt-2 mb-1">
-                                                      <strong class="mr-1">Peso Cliente:</strong><input type="text" name="pesoCliente" id="pesoCliente" class="item-medium item  numhtml" value="${(servicio.peso_cliente==null)?"":servicio.peso_cliente}" /> 
+                                                      <strong class="mr-1">Peso Cliente:</strong><input type="text" name="pesoCliente" id="pesoCliente" class="item-medium item  numhtml" value="${(servicio.pesoCliente==null)?"":servicio.pesoCliente}" /> 
                                                 </div>
                                           </div>
                                           
@@ -201,8 +222,14 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                                       <section id="seccionCamion" hidden>
                                                       <h4 class="form-section"><i class="ft-user"></i> Datos Transportista</h4>
                                                             <div class="datos mt-2 mb-1">
-                                                                  <div><strong class="mr-1">Transportista:</strong><input id="transportista" class="item" type="text" value="${servicio.transportista}" /></div>
-                                                                  <div><strong class="mr-1">Chofer:</strong><input class="item" id="chofer" name="chofer" type="text" value="${servicio.chofer}"/></div>
+                                                                <div>
+                                                                    <strong class="mr-1">Transportista:</strong>
+                                                                    ${htmltransportistas}
+                                                                </div>
+                                                                <div>
+                                                                    <strong class="mr-1">Chofer:</strong>
+                                                                    ${htmlchoferes}
+                                                                </div>
                                                             </div>
                                                             <div class="datos mt-2 mb-1">
                                                                   <div>
@@ -276,6 +303,9 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                         console.log(r);
                                         if (r.error != false) {
                                             erpalert("", "Entrada", r.mensaje);
+                                            var urlreglamento = __url__ + "/views/servicios/reglamento.php?entrada=" + servicio.id;
+                                            window.open(urlreglamento, "_self");
+
                                         } else {
                                             erpalert("error", "Entrada", r.mensaje);
                                             mensajeError(r.mensaje);
