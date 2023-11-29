@@ -535,16 +535,7 @@ class ServicioEnsacado
     public function getCargasPendientes($id)
     {
         $result    = array();
-        $sql       = 'select
-                    count(*) pendientes
-                    from servicios_ensacado
-                    where entrada_id = (
-                    select
-                    entrada_id
-                    from servicios_ensacado
-                    where id = ' . $id . '
-                    )
-                    and estatus_id != 5';
+        $sql       = 'CALL getCargasPendientes(' . $id . ')';
         $servicios = $this->db->query($sql);
         while ($c = $servicios->fetch_object()) {
             array_push($result, $c);

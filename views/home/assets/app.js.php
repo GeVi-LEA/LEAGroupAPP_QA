@@ -5,46 +5,56 @@ s.type = "text/javascript";
 $("head").append(s);
 
 $(document).ready(function() {
-      console.log("entra menuflex")
-      $(".card").click(function() {
-            loadingPage();
-            //setTimeout(() => {
-            //      swal.close();
-            //}, 3000);
-      });
-      $(".btn-Alta").click(function() {
-            jQuery.ajax({
-                  url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
-                  data: {
+    console.log("entra menuflex")
+    $(".card").click(function() {
+        loadingPage();
+        //setTimeout(() => {
+        //      swal.close();
+        //}, 3000);
+    });
+    $(".btn-Alta").click(function() {
+        jQuery.ajax({
+            url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+            data: {
 
-                  },
-                  method: 'POST',
-                  dataType: "json",
-            }).then(resp => {
-                  clientes = resp.clientes;
-                  transportes = resp.transportes;
-                  htmlclientes = `<strong class="mr-1">Cliente:</strong>
+            },
+            method: 'POST',
+            dataType: "json",
+        }).then(resp => {
+            clientes = resp.clientes;
+            transportes = resp.transportes;
+            cat_transportistas = resp.cat_transportistas;
+            htmlclientes = `<strong class="mr-1">Cliente:</strong>
                                           <select name="cliente" class="item" id="cliente">
                                                 <option value="" selected>--Selecciona--</option>`;
-                  for (var x = 0; x < clientes.length; x++) {
-                        htmlclientes += `<option value="${clientes[x].id}">${clientes[x].nombre} </option>`
-                  }
+            for (var x = 0; x < clientes.length; x++) {
+                htmlclientes += `<option value="${clientes[x].id}">${clientes[x].nombre} </option>`
+            }
 
-                  htmlclientes += `</select>`;
+            htmlclientes += `</select>`;
 
-                  htmltransportes = `<strong class="mr-1">Transporte:</strong>
+            htmltransportes = `<strong class="mr-1">Transporte:</strong>
                                           <select name="transporte" class="item" id="transporte">
                                                 <option value="" selected>--Selecciona--</option>`;
-                  for (var x = 0; x < transportes.length; x++) {
-                        htmltransportes += `<option value="${transportes[x].id}">${transportes[x].nombre} </option>`
-                  }
+            for (var x = 0; x < transportes.length; x++) {
+                htmltransportes += `<option value="${transportes[x].id}">${transportes[x].nombre} </option>`
+            }
 
-                  htmltransportes += `</select>`;
-                  // var elehtml = html ``;
-                  Swal.fire({
-                        title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Registro de unidades</span>`,
-                        confirmButtonText: 'Guardar',
-                        html: /*html*/ `
+            htmltransportes += `</select>`;
+
+            htmltransportistas = `
+                              <select name="transportista" class="item" id="transportista">
+                                    <option value="" selected>--Selecciona--</option>`;
+            for (var x = 0; x < cat_transportistas.length; x++) {
+                htmltransportistas += `<option value="${cat_transportistas[x].id}">${cat_transportistas[x].nombre} </option>`
+            }
+            htmltransportistas += `</select>`;
+
+            // var elehtml = html ``;
+            Swal.fire({
+                title: /*html*/ `<h4>ENTRADAS Y SALIDAS</h4><span><h6>Registro de unidades</span>`,
+                confirmButtonText: 'Guardar',
+                html: /*html*/ `
                         
                               <section id="sectionForm">
                                     <form id="ensacadoForm" enctype="multipart/form-data" class="form form-horizontal">
@@ -76,8 +86,30 @@ $(document).ready(function() {
                                                       <section id="seccionCamion" hidden>
                                                       <h4 class="form-section"><i class="ft-user"></i> Datos Transportista</h4>
                                                             <div class="datos mt-2 mb-1">
-                                                                  <div><strong class="mr-1">Transportista:</strong><input id="transportista" class="item" type="text" /></div>
-                                                                  <div><strong class="mr-1">Chofer:</strong><input class="item" id="chofer" name="chofer" type="text" /></div>
+                                                                <div id="divRadiosT" class="div-radiosT">
+                                                                    <strong class="mr-1">Transporte por:</strong>
+                                                                    <strong for="transp_lea_cliente">LEA:</strong>
+                                                                    <input class="ml-1 mr-3" id="transp_lea_cliente" type="radio" name="transp_lea_cliente" value="0"  />
+                                                                    <strong for="transp_lea_clientec">Cliente:</strong>
+                                                                    <input class="ml-1" type="radio" id="transp_lea_clientec" name="transp_lea_cliente" value="1" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="datos mt-2 mb-1">
+                                                                <div>
+                                                                    <strong class="mr-1">Transportista:</strong>
+                                                                    ${htmltransportistas}
+                                                                </div>
+                                                                <div>
+                                                                    <strong class="mr-1">Chofer:</strong>
+                                                                    <select name="chofer" class="item" id="chofer">
+                                                                        <option value="" selected>--Selecciona--</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div>
+                                                                    <strong class="mr-1">Cant. Puertas:</strong>
+                                                                    <input name="cant_puertas" class="item" id="cant_puertas" type="number" />
+                                                                </div>
+                                                                  
                                                             </div>
                                                             <div class="datos mt-2 mb-1">
                                                                   <div>
@@ -107,148 +139,194 @@ $(document).ready(function() {
                                           
                                           </form>
                               </section>`,
-                        preConfirm: () => {
-                              if (validaCampos()) {
-                                    erpalert("error", "", "Validar campor obligatorios")
-                                    return false; // Prevent confirmed
-                              }
-                        },
-                        didOpen: () => {
-                              $('input[name="ferrotolva"]').change(function() {
-                                    cambiaFerrotolva($(this).val());
-                              });
+                preConfirm: () => {
+                    if (validaCampos()) {
+                        erpalert("error", "", "Validar campor obligatorios")
+                        return false; // Prevent confirmed
+                    }
+                },
+                didOpen: () => {
+                    $('input[name="ferrotolva"]').change(function() {
+                        cambiaFerrotolva($(this).val());
+                    });
+                    $(".transportista").unbind();
+                    $("#transportista").change(function() {
+                        getChoferes($("#transportista option:selected").val());
+                    });
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    //e.preventDefault();
+                    let ferrotolva = $('input[name="ferrotolva"]:checked').val();
+                    let numeroUnidad = $("#numeroUnidad").val();
+                    let observaciones = $("#observaciones").val();
+                    let cliente = $("#cliente").val();
+                    $("#ensacadoForm").find("input, select").removeAttr("disabled");
+                    var datosForm = new FormData($("#ensacadoForm")[0]);
+                    console.log(datosForm);
+                    jQuery.ajax({
+                        url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                        data: datosForm,
+                        processData: false,
+                        contentType: false,
+                        enctype: "multipart/form-data",
+                        //data: {
+                        //      ferrotolva: ferrotolva,
+                        //      numeroUnidad: numeroUnidad,
+                        //      cliente: cliente,
+                        //      observaciones: observaciones,
+                        //      transporte: ""
+                        //},
+                        method: 'post',
+                        dataType: "json",
+                    }).then(resp => {
+                        console.log(resp);
+                        if (resp.error) {
+                            erpalert("", "Alta", resp.mensaje)
+                            mensajeCorrecto(resp.mensaje);
+                        } else {
+                            erpalert("error", "Error", resp.mensaje)
+                            mensajeError(resp.mensaje);
                         }
-                  }).then((result) => {
-                        if (result.isConfirmed) {
-                              //e.preventDefault();
-                              let ferrotolva = $('input[name="ferrotolva"]:checked').val();
-                              let numeroUnidad = $("#numeroUnidad").val();
-                              let observaciones = $("#observaciones").val();
-                              let cliente = $("#cliente").val();
-                              $("#ensacadoForm").find("input, select").removeAttr("disabled");
-                              var datosForm = new FormData($("#ensacadoForm")[0]);
-                              console.log(datosForm);
-                              jQuery.ajax({
-                                    url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
-                                    data: datosForm,
-                                    processData: false,
-                                    contentType: false,
-                                    enctype: "multipart/form-data",
-                                    //data: {
-                                    //      ferrotolva: ferrotolva,
-                                    //      numeroUnidad: numeroUnidad,
-                                    //      cliente: cliente,
-                                    //      observaciones: observaciones,
-                                    //      transporte: ""
-                                    //},
-                                    method: 'post',
-                                    dataType: "json",
-                              }).then(resp => {
-                                    console.log(resp);
-                                    if (resp.error) {
-                                          erpalert("", "Alta", resp.mensaje)
-                                          mensajeCorrecto(resp.mensaje);
-                                    } else {
-                                          erpalert("error", "Error", resp.mensaje)
-                                          mensajeError(resp.mensaje);
-                                    }
-                              }).fail(resp => {}).catch(resp => {
-                                    swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                                          icon: 'error'
-                                    });
-                              });
-                        }
-                  });
-
-            }).fail(resp => {}).catch(resp => {
-                  swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                        icon: 'error'
-                  });
+                    }).fail(resp => {}).catch(resp => {
+                        swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                            icon: 'error'
+                        });
+                    });
+                }
             });
 
-      });
-      validaCantidades();
-      setInterval(() => {
-            validaCantidades();
-      }, 30000);
+        }).fail(resp => {}).catch(resp => {
+            swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                icon: 'error'
+            });
+        });
+
+    });
+    validaCantidades();
+    setInterval(() => {
+        validaCantidades();
+    }, 30000);
 
 });
 
 const validaCampos = () => {
-      let faltan = false;
-      $("#numeroUnidad").removeClass("invalid").removeClass("checked");
-      if ($("#numeroUnidad").val() == "") {
+    let faltan = false;
+    $("#numeroUnidad").removeClass("invalid").removeClass("checked");
+    if ($("#numeroUnidad").val() == "") {
+        faltan = true;
+        $("#numeroUnidad").addClass("invalid");
+    } else {
+        $("#numeroUnidad").addClass("checked");
+    }
+    $("#cliente").removeClass("invalid").removeClass("checked");
+    if ($("#cliente").val() == "") {
+        faltan = true;
+        $("#cliente").addClass("invalid");
+    } else {
+        $("#cliente").addClass("checked");
+    }
+
+    if ($("#transporteTren").is(":visible")) {
+        $("#transporteTren").removeClass("invalid").removeClass("checked");
+        if ($("#transporteTren").val() == "") {
             faltan = true;
-            $("#numeroUnidad").addClass("invalid");
-      } else {
-            $("#numeroUnidad").addClass("checked");
-      }
-      $("#cliente").removeClass("invalid").removeClass("checked");
-      if ($("#cliente").val() == "") {
+            $("#transporteTren").addClass("invalid");
+        } else {
+            $("#transporteTren").addClass("checked");
+        }
+    }
+
+    if ($("#transporte").is(":visible")) {
+        $("#transporte").removeClass("invalid").removeClass("checked");
+        if ($("#transporte").val() == "") {
             faltan = true;
-            $("#cliente").addClass("invalid");
-      } else {
-            $("#cliente").addClass("checked");
-      }
+            $("#transporte").addClass("invalid");
+        } else {
+            $("#transporte").addClass("checked");
+        }
+    }
 
-      if ($("#transporteTren").is(":visible")) {
-            $("#transporteTren").removeClass("invalid").removeClass("checked");
-            if ($("#transporteTren").val() == "") {
-                  faltan = true;
-                  $("#transporteTren").addClass("invalid");
-            } else {
-                  $("#transporteTren").addClass("checked");
-            }
-      }
-
-      if ($("#transporte").is(":visible")) {
-            $("#transporte").removeClass("invalid").removeClass("checked");
-            if ($("#transporte").val() == "") {
-                  faltan = true;
-                  $("#transporte").addClass("invalid");
-            } else {
-                  $("#transporte").addClass("checked");
-            }
-      }
-
-      // transportista
-      if ($("#transportista").is(":visible")) {
-            $("#transportista").removeClass("invalid").removeClass("checked");
-            if ($("#transportista").val() == "") {
-                  faltan = true;
-                  $("#transportista").addClass("invalid");
-            } else {
-                  $("#transportista").addClass("checked");
-            }
-      }
-      // $("#cliente").val()
-      return faltan;
+    // transportista
+    if ($("#transportista").is(":visible")) {
+        $("#transportista").removeClass("invalid").removeClass("checked");
+        if ($("#transportista").val() == "") {
+            faltan = true;
+            $("#transportista").addClass("invalid");
+        } else {
+            $("#transportista").addClass("checked");
+        }
+    }
+    // $("#cliente").val()
+    return faltan;
 }
 let cantidades;
 const validaCantidades = () => {
-      jQuery.ajax({
-            url: __url__ + '?ajax&controller=Servicios&action=getCantidadesServicios',
-            data: {},
-            method: 'post',
-            dataType: "json",
-      }).then(resp => {
-            cantidades = resp;
-            $(".badge").html("");
+    jQuery.ajax({
+        url: __url__ + '?ajax&controller=Servicios&action=getCantidadesServicios',
+        data: {},
+        method: 'post',
+        dataType: "json",
+    }).then(resp => {
+        cantidades = resp;
+        $(".badge").html("");
+        $(".badge").removeClass('animated flash');
+        for (var x = 0; x < cantidades.etapas.length; x++) {
+            //console.log(cantidades.etapas[x].Etapa, " - ", cantidades.etapas[x].Cantidad)
+            $("#" + cantidades.etapas[x].Etapa + "_badge").html(cantidades.etapas[x].Cantidad);
+            $("#" + cantidades.etapas[x].Etapa + "_badge").addClass('animated flash');
+
+        }
+        setTimeout(() => {
             $(".badge").removeClass('animated flash');
-            for (var x = 0; x < cantidades.etapas.length; x++) {
-                  //console.log(cantidades.etapas[x].Etapa, " - ", cantidades.etapas[x].Cantidad)
-                  $("#" + cantidades.etapas[x].Etapa + "_badge").html(cantidades.etapas[x].Cantidad);
-                  $("#" + cantidades.etapas[x].Etapa + "_badge").addClass('animated flash');
+        }, 2000);
 
+    }).fail(resp => {}).catch(resp => {
+        swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+            icon: 'error'
+        });
+    });
+}
+
+function getChoferes(transp_id) {
+    var selectLote = $("#chofer");
+    $.ajax({
+        data: {
+            transp_id: transp_id
+        },
+        url: "?ajax&controller=Servicios&action=getChoferesByTransporte",
+        type: "POST",
+        dataType: "json",
+        success: function(r) {
+            console.log("getChoferes:");
+            console.log(r.choferes);
+            if (r != false) {
+                selectLote.find("option").not(":first").remove();
+                if (r.length != 0) {
+                    $(r.choferes).each(function(i, v) {
+                        // indice, valor
+                        selectLote.append(
+                            '<option value="' +
+                            v.chof_id +
+                            '">' +
+                            v.chof_nombres +
+                            " " +
+                            v.chof_apellidos +
+                            "</option>"
+                        );
+                    });
+                } else {
+                    selectLote.append(
+                        '<option value="" disabled>No hay choferes registrados</option>'
+                    );
+                }
+                $("#chofer").select2();
             }
-            setTimeout(() => {
-                  $(".badge").removeClass('animated flash');
-            }, 2000);
-
-      }).fail(resp => {}).catch(resp => {
-            swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                  icon: 'error'
-            });
-      });
+            // console.log("termina llenacombo");
+        },
+        error: function() {
+            alert("Algo salio mal, contacte al Administrador.");
+        },
+    });
 }
 </script>

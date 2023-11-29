@@ -716,52 +716,37 @@ function detenerServicio(id, almacen_id = "1") {
         data: {
             id: id,
         },
-        url: "?ajax&controller=Servicios&action=getCargasPendientes",
+        url: __url__ + "?ajax&controller=Servicios&action=getCargasPendientes",
         type: "POST",
         dataType: "json",
         success: function(r) {
             console.log(r);
             cargaspendientes = r;
             let servicio = servicios.filter(el => el.id_servicio == id)[0];
-            console.log(servicio);
+            console.log(cargaspendientes);
             if (cargaspendientes.cargaspendientes[0].pendientes == "1") {
                 var html = `
                         <div class='row'>
                             <div class='col-11'>
                                 <h3>Favor de ingresar los sellos de la caja</h3>
                             </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-11'>
+                        </div>`;
+                for (var x = 0; x < cargaspendientes.cargaspendientes[0].cant_puertas; x++) {
+                    html += `
+                                <div class='row'>
+                                    <div class='col-11'>
 
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Sello 1</div>
-                                    <input type="text" name="sello1" class=" form-control" id="sello1" required />
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Sello ${x+1}</div>
+                                            <input type="text" name="sello${x+1}" class="sellos form-control" id="sello${x+1}" required />
+                                        </div>
+
+                                    </div>
                                 </div>
-
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-11'>
-
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Sello 2</div>
-                                    <input type="text" name="sello2" class=" form-control" id="sello2" />
-
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class='row'>
-                            <div class='col-11'>
-
-                                <div class="input-group-prepend">
-                                    <div class="input-group-text">Sello 3</div>
-                                    <input type="text" name="sello3" class=" form-control" id="sello3" />
-                                </div>
-
-                            </div>
-                        </div>
+                        
+                            `;
+                }
+                html += `
                         <div class='row'>
                             <div class='col-11'>
                                 <canvas id="canvas">Su navegador no soporta canvas :( </canvas>     
@@ -788,9 +773,7 @@ function detenerServicio(id, almacen_id = "1") {
                                 cantidadAlmacen: servicio.kilos.replace(",", ""),
                                 almacen: almacen_id,
                                 entrada_id: servicio.entrada_id,
-                                sello1: $(".swal2-html-container #sello1").val(),
-                                sello2: $(".swal2-html-container #sello2").val(),
-                                sello3: $(".swal2-html-container #sello3").val(),
+                                sellos: getSellos(),
                                 firma: getTrazado(),
 
 
@@ -892,6 +875,16 @@ function detenerServicio(id, almacen_id = "1") {
     // });
 }
 
+function getSellos() {
+    var jsonObj = [];
+    $(".sellos").each(function() {
+        item = {}
+        item[$(this).attr('name')] = $(this).val();
+        jsonObj.push(item);
+    });
+    var jsonString = JSON.stringify(jsonObj);
+    return '{"sellos":' + jsonString + '}';
+}
 
 function validarDatosEnviarAlmacen() {
     var form = $("#formEnviarAlmacen");

@@ -234,7 +234,7 @@ class ServicioEntrada
 
     public function setSellos($sellos): void
     {
-        $this->sellos = $this->db->real_escape_string(UtilsHelp::toUpperString($sellos));
+        $this->sellos = $sellos;
     }
 
     public function getSello1()
@@ -635,7 +635,7 @@ class ServicioEntrada
     public function updateSellos()
     {
         $sql    = "update servicios_entradas set 
-        sello1 = '{$this->getSello1()}'
+        sellos = '{$this->getSellos()}'
         , sello2 = '{$this->getSello2()}'
         , sello3 = '{$this->getSello3()}'
         , firma_salida = '{$this->getFirma_salida()}'

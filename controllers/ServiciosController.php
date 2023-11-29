@@ -687,7 +687,7 @@ class serviciosController
         $operacion       = isset($_POST['operacionEnviar']) ? $_POST['operacionEnviar'] : null;
         $BarreduraSucia  = isset($_POST['BarreduraSucia']) ? $_POST['BarreduraSucia'] : null;
         $BarreduraLimpia = isset($_POST['BarreduraLimpia']) ? $_POST['BarreduraLimpia'] : null;
-        $sello1          = isset($_POST['sello1']) ? $_POST['sello1'] : null;
+        $sellos          = isset($_POST['sellos']) ? $_POST['sellos'] : null;
         $sello2          = isset($_POST['sello2']) ? $_POST['sello2'] : null;
         $sello3          = isset($_POST['sello3']) ? $_POST['sello3'] : null;
         $entrada_id      = isset($_POST['entrada_id']) ? $_POST['entrada_id'] : null;
@@ -705,7 +705,7 @@ class serviciosController
             $r                = $servicio->finalizarServicio();
             $servicio_entrada = new ServicioEntrada();
             $servicio_entrada->setId($entrada_id);
-            $servicio_entrada->setSello1($sello1);
+            $servicio_entrada->setSellos($sellos);
             $servicio_entrada->setSello2($sello2);
             $servicio_entrada->setSello3($sello3);
             $servicio_entrada->setFirma_salida($firma);
