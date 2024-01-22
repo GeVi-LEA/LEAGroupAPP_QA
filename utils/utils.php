@@ -48,6 +48,33 @@ class Utils
         }
     }
 
+    public static function permisosGerente()
+    {
+        if (self::isAdmin() || self::isGerente()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function permisosSupervisor()
+    {
+        if (self::isAdmin() || self::isSupervisor()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function permisosBascula()
+    {
+        if (self::isAdmin() || self::isBascula()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public static function permisosVigilancia()
     {
         if (self::isAdmin() || self::isVigilancia()) {
@@ -84,15 +111,6 @@ class Utils
         }
     }
 
-    public static function permisosBascula()
-    {
-        if (self::isAdmin() || self::isBascula()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public static function getPermisosUser()
     {
         if (isset($_SESSION['usuario'])) {
@@ -118,6 +136,26 @@ class Utils
         $permisos = self::getPermisosUser();
         if (!empty($permisos)) {
             return in_array('3', $permisos);
+        } else {
+            return false;
+        }
+    }
+
+    public static function isSupervisor()
+    {
+        $permisos = self::getPermisosUser();
+        if (!empty($permisos)) {
+            return in_array('12', $permisos);
+        } else {
+            return false;
+        }
+    }
+
+    public static function isBascula()
+    {
+        $permisos = self::getPermisosUser();
+        if (!empty($permisos)) {
+            return in_array('11', $permisos);
         } else {
             return false;
         }
@@ -198,16 +236,6 @@ class Utils
         $permisos = self::getPermisosUser();
         if (!empty($permisos)) {
             return in_array('4', $permisos);
-        } else {
-            return false;
-        }
-    }
-
-    public static function isBascula()
-    {
-        $permisos = self::getPermisosUser();
-        if (!empty($permisos)) {
-            return in_array('12', $permisos);
         } else {
             return false;
         }
@@ -390,6 +418,9 @@ class Utils
                 break;
             case 'PROG':
                 return 'estatus-programa';
+                break;
+            case 'SALIDA':
+                return 'estatus-salida';
                 break;
         }
     }

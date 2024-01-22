@@ -579,6 +579,7 @@ function formatDate(date) {
         ].join(":")
     );
 }
+
 const validaCampos = () => {
     let faltan = false;
     $("#pesoCliente").removeClass("invalid").removeClass("checked");
@@ -726,15 +727,15 @@ function detenerServicio(id, almacen_id = "1") {
             console.log(cargaspendientes);
             if (cargaspendientes.cargaspendientes[0].pendientes == "1") {
                 var html = `
-                        <div class='row'>
-                            <div class='col-11'>
+                        <div class='row' id="contenedor">
+                            <div class='col-10'>
                                 <h3>Favor de ingresar los sellos de la caja</h3>
                             </div>
                         </div>`;
                 for (var x = 0; x < cargaspendientes.cargaspendientes[0].cant_puertas; x++) {
                     html += `
                                 <div class='row'>
-                                    <div class='col-11'>
+                                    <div class='col-10'>
 
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">Sello ${x+1}</div>
@@ -748,7 +749,7 @@ function detenerServicio(id, almacen_id = "1") {
                 }
                 html += `
                         <div class='row'>
-                            <div class='col-11'>
+                            <div class='col-10'>
                                 <canvas id="canvas">Su navegador no soporta canvas :( </canvas>     
                             </div>
                         </div>
@@ -761,6 +762,7 @@ function detenerServicio(id, almacen_id = "1") {
                     denyButtonText: `Cancelar`,
                     didOpen: () => {
                         iniciaCanvas();
+                        $("#contenedor").parents(".swal2-html-container").attr("style", "overflow: hidden !important;");
                     }
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
@@ -846,8 +848,10 @@ function detenerServicio(id, almacen_id = "1") {
                                         getServicios();
                                     },
                                     error: function(r) {
-                                        console.log(r.responseText);
-                                        mensajeError("Algo salio mal,  contacte al administrador.");
+                                        //console.log(r.responseText);
+                                        // mensajeError("Algo salio mal,  contacte al administrador.");
+                                        console.log(r);
+                                        erpalert("error", "Algo salio mal", r);
                                     },
                                 });
                             },

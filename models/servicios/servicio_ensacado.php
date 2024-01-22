@@ -262,6 +262,16 @@ class ServicioEnsacado
         $this->tipoTarima = $tipoTarima;
     }
 
+    public function getAlmacenId()
+    {
+        return $this->lote;
+    }
+
+    public function setAlmacenId($almacenId): void
+    {
+        $this->almacen_id = $almacenId;
+    }
+
     public function save()
     {
         $sql    = "insert into servicios_ensacado values(
