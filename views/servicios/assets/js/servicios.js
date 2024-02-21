@@ -1,3 +1,5 @@
+var $regexname = /[A-Z]{4}\d{6}/;
+
 $(document).ready(function () {
 	let serv = ""; // = __url__; //"http://localhost/GrupoLEA/";
 	if (typeof __url__ != "undefined") {
@@ -16,11 +18,7 @@ $(document).ready(function () {
 
 	$("#entradaSalida").click(function (e) {
 		e.preventDefault();
-		window.open(
-			serv + "?controller=Servicios&action=crearEntrada",
-			"Entradas / Salidas",
-			"width=1300,height=300"
-		);
+		window.open(serv + "?controller=Servicios&action=crearEntrada", "Entradas / Salidas", "width=1300,height=300");
 	});
 
 	$("#fechaPrograma").datepicker({
@@ -55,11 +53,7 @@ $(document).ready(function () {
 	});
 
 	$("#preciosServClientes").click(function () {
-		window.open(
-			serv + "?controller=Servicios&action=clientesServicios",
-			"Precios clientes - servicios",
-			"width=1300,height=700"
-		);
+		window.open(serv + "?controller=Servicios&action=clientesServicios", "Precios clientes - servicios", "width=1300,height=700");
 	});
 
 	$("#new").on("click", function (e) {
@@ -131,9 +125,7 @@ $(document).ready(function () {
 									}
 								},
 								error: function () {
-									alert(
-										"Algo salio mal, contacte al administrador del sistema"
-									);
+									alert("Algo salio mal, contacte al administrador del sistema");
 								},
 							});
 						}
@@ -251,20 +243,14 @@ $(document).ready(function () {
 		diferenciaTeoricaColor(diferenciaTeorica, tolerable);
 	}
 
-	if (
-		$("#diferenciaTeorica").val() != "" &&
-		$("#diferenciaTeorica").val() != undefined
-	) {
+	if ($("#diferenciaTeorica").val() != "" && $("#diferenciaTeorica").val() != undefined) {
 		var diferenciaTeorica = quitarComasNumero($("#diferenciaTeorica").val());
 		var tolerable = quitarComasNumero($("#tolerable").val());
 		diferenciaTeoricaColor(diferenciaTeorica, tolerable);
 	}
 
 	function diferenciaTeoricaColor(diferenciaTeorica, tolerable) {
-		if (
-			Math.sign(diferenciaTeorica) == -1 &&
-			Math.abs(diferenciaTeorica) > tolerable
-		) {
+		if (Math.sign(diferenciaTeorica) == -1 && Math.abs(diferenciaTeorica) > tolerable) {
 			$("#diferenciaTeorica").removeClass("green");
 			$("#diferenciaTeorica").addClass("warning");
 		} else {
@@ -273,16 +259,10 @@ $(document).ready(function () {
 		}
 	}
 
-	if (
-		$("#diferenciaReal").val() != "" &&
-		$("#diferenciaReal").val() != undefined
-	) {
+	if ($("#diferenciaReal").val() != "" && $("#diferenciaReal").val() != undefined) {
 		var diferenciaTeorica = quitarComasNumero($("#diferenciaReal").val());
 		var tolerable = quitarComasNumero($("#tolerable").val());
-		if (
-			Math.sign(diferenciaTeorica) == -1 &&
-			Math.abs(diferenciaTeorica) > tolerable
-		) {
+		if (Math.sign(diferenciaTeorica) == -1 && Math.abs(diferenciaTeorica) > tolerable) {
 			$("#diferenciaReal").removeClass("green");
 			$("#diferenciaReal").addClass("warning");
 		} else {
@@ -380,10 +360,7 @@ $(document).ready(function () {
 			valid = false;
 		}
 
-		if (
-			$("#transporte").val() == "" &&
-			$('input[name="ferrotolva"]').val() == "C"
-		) {
+		if ($("#transporte").val() == "" && $('input[name="ferrotolva"]').val() == "C") {
 			$("#transporte").addClass("required");
 			valid = false;
 		}
@@ -444,22 +421,10 @@ $(document).ready(function () {
 						if (r.length != 0) {
 							$(r).each(function (i, v) {
 								// indice, valor
-								selectLote.append(
-									'<option value="' +
-										v.lote +
-										'">' +
-										v.lote +
-										" - " +
-										v.nombre +
-										" - " +
-										v.alias +
-										"</option>"
-								);
+								selectLote.append('<option value="' + v.lote + '">' + v.lote + " - " + v.nombre + " - " + v.alias + "</option>");
 							});
 						} else {
-							selectLote.append(
-								'<option value="" disabled>No hay lotes registrados</option>'
-							);
+							selectLote.append('<option value="" disabled>No hay lotes registrados</option>');
 						}
 					}
 				},
@@ -467,12 +432,7 @@ $(document).ready(function () {
 					alert("Algo salio mal, contacte al Administrador.");
 				},
 			});
-		} else if (
-			servicio.includes("ENSACADO") ||
-			servicio.includes("ALMACENAJE") ||
-			servicio.includes("TRASPALEO") ||
-			servicio.includes("REEMPAQUE")
-		) {
+		} else if (servicio.includes("ENSACADO") || servicio.includes("ALMACENAJE") || servicio.includes("TRASPALEO") || servicio.includes("REEMPAQUE")) {
 			lote.attr("disabled", false).attr("hidden", false);
 			selectLote.attr("disabled", true).attr("hidden", true);
 			$("#productoServ").val("").attr("disabled", false);
@@ -509,33 +469,23 @@ $(document).ready(function () {
 		e.preventDefault();
 		var id = tr.find("#idEnsacado").html();
 		if (id != "") {
-			window.open(
-				serv + "?controller=Servicios&action=generarEnsacado&id=" + id,
-				"Ensacado",
-				"width=1300,height=700"
-			);
+			window.open(serv + "?controller=Servicios&action=generarEnsacado&id=" + id, "Ensacado", "width=1300,height=700");
 		}
 	});
 
-	$("#ensacadoForm, #formEditarServicio, #seccionServicios").on(
-		"click",
-		"#show",
-		function () {
-			$("#editarServicioModal").modal("hide");
-			var div = $(this).parent("div");
-			var ferro = $("#numeroUnidad").val();
-			var docInput = $(div).children("input")[2];
-			var doc = $(docInput).val();
-			$("#tituloDocumento").html("Archivo: " + doc);
-			var url = "views/servicios/uploads/" + ferro + "/" + doc;
-			console.log(docInput);
-			$("#viewDoc").append(
-				'<object class="view-doc" id="objDoc" data=""></object>'
-			);
-			$("#objDoc").attr("data", url);
-			$("#modalDocumento").modal("show");
-		}
-	);
+	$("#ensacadoForm, #formEditarServicio, #seccionServicios").on("click", "#show", function () {
+		$("#editarServicioModal").modal("hide");
+		var div = $(this).parent("div");
+		var ferro = $("#numeroUnidad").val();
+		var docInput = $(div).children("input")[2];
+		var doc = $(docInput).val();
+		$("#tituloDocumento").html("Archivo: " + doc);
+		var url = "views/servicios/uploads/" + ferro + "/" + doc;
+		console.log(docInput);
+		$("#viewDoc").append('<object class="view-doc" id="objDoc" data=""></object>');
+		$("#objDoc").attr("data", url);
+		$("#modalDocumento").modal("show");
+	});
 
 	$("#modalDocumento").on("hidden.bs.modal", function () {
 		$("#objDoc").remove();
@@ -598,9 +548,7 @@ $(document).ready(function () {
 									}
 								},
 								error: function () {
-									alert(
-										"Algo salio mal, no se pudo borrar el archivo, contacte al administrador del sistema"
-									);
+									alert("Algo salio mal, no se pudo borrar el archivo, contacte al administrador del sistema");
 								},
 							});
 						},
@@ -659,9 +607,7 @@ $(document).ready(function () {
 				$.confirm({
 					title: "<span class='material-icons i-danger'>dangerous</span><span>¡Atención!<span>",
 					content:
-						"Formato invalido de Documento <br/>Archivo: <strong>" +
-						tipoArchivo +
-						"</strong> <br/> Formatos aceptados: <strong>.pdf, .png, .gif, .jpeg, .jpg. </strong>",
+						"Formato invalido de Documento <br/>Archivo: <strong>" + tipoArchivo + "</strong> <br/> Formatos aceptados: <strong>.pdf, .png, .gif, .jpeg, .jpg. </strong>",
 					type: "red",
 					typeAnimated: true,
 					animation: "zoom",
@@ -721,68 +667,19 @@ $(document).ready(function () {
 						formEditar.find("#lote").val(r.lote);
 						formEditar.find("#producto").val(r.producto_id);
 						formEditar.find("#alias").val(r.alias);
-						formEditar
-							.find("#cantidad")
-							.val(r.cantidad != null ? htmlNum(r.cantidad) : "");
-						formEditar
-							.find("#totalEnsacado")
-							.val(
-								r.total_ensacado != null
-									? htmlNum(r.total_ensacado)
-									: ""
-							);
-						formEditar
-							.find("#fechaInicio")
-							.val(
-								r.fecha_inicio != null
-									? formatDateHourToString(new Date(r.fecha_inicio))
-									: ""
-							);
-						formEditar
-							.find("#fechaFin")
-							.val(
-								r.fecha_fin != null
-									? formatDateHourToString(new Date(r.fecha_fin))
-									: ""
-							);
-						formEditar
-							.find("#fechaPrograma")
-							.val(
-								r.fecha_programacion != null
-									? formatDateToString(new Date(r.fecha_programacion))
-									: ""
-							);
-						formEditar
-							.find("#bultos")
-							.val(r.bultos != null ? htmlNum(r.bultos) : "");
-						formEditar
-							.find("#tarimas")
-							.val(r.tarimas != null ? htmlNum(r.tarimas) : "");
-						formEditar
-							.find("#tipoTarima")
-							.val(r.tipo_tarima != null ? htmlNum(r.tipo_tarima) : "");
-						formEditar
-							.find("#parcial")
-							.val(r.parcial != null ? htmlNum(r.parcial) : "");
-						formEditar
-							.find("#barreduraSucia")
-							.val(
-								r.barredura_sucia != null
-									? htmlNum(r.barredura_sucia)
-									: ""
-							);
-						formEditar
-							.find("#barreduraLimpia")
-							.val(
-								r.barredura_limpia != null
-									? htmlNum(r.barredura_limpia)
-									: ""
-							);
-						var barredura =
-							Number(r.barredura_sucia) + Number(r.barredura_limpia);
-						formEditar
-							.find("#barredura")
-							.val(barredura != 0 ? htmlNum(barredura) : "");
+						formEditar.find("#cantidad").val(r.cantidad != null ? htmlNum(r.cantidad) : "");
+						formEditar.find("#totalEnsacado").val(r.total_ensacado != null ? htmlNum(r.total_ensacado) : "");
+						formEditar.find("#fechaInicio").val(r.fecha_inicio != null ? formatDateHourToString(new Date(r.fecha_inicio)) : "");
+						formEditar.find("#fechaFin").val(r.fecha_fin != null ? formatDateHourToString(new Date(r.fecha_fin)) : "");
+						formEditar.find("#fechaPrograma").val(r.fecha_programacion != null ? formatDateToString(new Date(r.fecha_programacion)) : "");
+						formEditar.find("#bultos").val(r.bultos != null ? htmlNum(r.bultos) : "");
+						formEditar.find("#tarimas").val(r.tarimas != null ? htmlNum(r.tarimas) : "");
+						formEditar.find("#tipoTarima").val(r.tipo_tarima != null ? htmlNum(r.tipo_tarima) : "");
+						formEditar.find("#parcial").val(r.parcial != null ? htmlNum(r.parcial) : "");
+						formEditar.find("#barreduraSucia").val(r.barredura_sucia != null ? htmlNum(r.barredura_sucia) : "");
+						formEditar.find("#barreduraLimpia").val(r.barredura_limpia != null ? htmlNum(r.barredura_limpia) : "");
+						var barredura = Number(r.barredura_sucia) + Number(r.barredura_limpia);
+						formEditar.find("#barredura").val(barredura != 0 ? htmlNum(barredura) : "");
 						formEditar.find("#observaciones").val(r.observaciones);
 						var arch = formEditar.find("#archivoOrden");
 						$(arch).val(r.doc_orden);
@@ -795,44 +692,18 @@ $(document).ready(function () {
 							$(div).find("#addDocumento").show();
 						}
 						var servicio = r.servicio;
-						if (
-							servicio.includes("CARGA") ||
-							servicio.includes("AJUSTE")
-						) {
-							formEditar
-								.find("#lote")
-								.attr("disabled", true)
-								.attr("hidden", true);
-							formEditar
-								.find("#loteSelect")
-								.attr("disabled", false)
-								.attr("hidden", false);
-						} else if (
-							servicio.includes("ENSACADO") ||
-							servicio.includes("ALMACENAJE") ||
-							servicio.includes("TRASPALEO") ||
-							servicio.includes("REEMPAQUE")
-						) {
-							formEditar
-								.find("#lote")
-								.attr("disabled", false)
-								.attr("hidden", false);
-							formEditar
-								.find("#loteSelect")
-								.attr("disabled", true)
-								.attr("hidden", true);
-							formEditar
-								.find("#productoServ")
-								.val("")
-								.attr("disabled", false);
+						if (servicio.includes("CARGA") || servicio.includes("AJUSTE")) {
+							formEditar.find("#lote").attr("disabled", true).attr("hidden", true);
+							formEditar.find("#loteSelect").attr("disabled", false).attr("hidden", false);
+						} else if (servicio.includes("ENSACADO") || servicio.includes("ALMACENAJE") || servicio.includes("TRASPALEO") || servicio.includes("REEMPAQUE")) {
+							formEditar.find("#lote").attr("disabled", false).attr("hidden", false);
+							formEditar.find("#loteSelect").attr("disabled", true).attr("hidden", true);
+							formEditar.find("#productoServ").val("").attr("disabled", false);
 							formEditar.find("#aliasServ").attr("disabled", false);
 						} else {
 							formEditar.find("#lote").attr("hidden", true);
 							formEditar.find("#loteSelect").attr("hidden", true);
-							formEditar
-								.find("#productoServ")
-								.val("")
-								.attr("disabled", true);
+							formEditar.find("#productoServ").val("").attr("disabled", true);
 							formEditar.find("#aliasServ").attr("disabled", true);
 						}
 						$("#editarServicioModal").modal("show");
@@ -905,9 +776,7 @@ $(document).ready(function () {
 								},
 								error: function (r) {
 									console.log(r.responseText);
-									mensajeError(
-										"Algo salio mal,  contacte al administrador."
-									);
+									mensajeError("Algo salio mal,  contacte al administrador.");
 								},
 							});
 						},
@@ -933,8 +802,7 @@ $(document).ready(function () {
 			formEditar.find("#totalEnsacado").val(htmlNum(total));
 			formEditar.find("#bultos").val(htmlNum(Math.ceil(bultos)));
 			formEditar.find("#tarimas").val(htmlNum(Math.floor(bultos / 55)));
-			var parcial =
-				parseFloat("." + (bultos / 55).toString().split(".")[1]) * 55;
+			var parcial = parseFloat("." + (bultos / 55).toString().split(".")[1]) * 55;
 			formEditar.find("#parcial").val(htmlNum(Math.round(parcial)));
 		} else {
 			$(this).addClass("required");
@@ -945,12 +813,7 @@ $(document).ready(function () {
 		var div = $(this).parent("div").parent("div");
 		var id = $(div).find("#idServicio").val();
 		var nombreServicio = $(div).find("#nombreServicio").text();
-		if (
-			nombreServicio.includes("ENSACADO") ||
-			nombreServicio.includes("ALMACENAJE") ||
-			nombreServicio.includes("TRASPALEO") ||
-			nombreServicio.includes("REEMPAQUE")
-		) {
+		if (nombreServicio.includes("ENSACADO") || nombreServicio.includes("ALMACENAJE") || nombreServicio.includes("TRASPALEO") || nombreServicio.includes("REEMPAQUE")) {
 			var ticket = $("#ticket").val();
 			if (ticket != "") {
 				iniciarServicio(id);
@@ -1000,9 +863,7 @@ $(document).ready(function () {
 							},
 							error: function (r) {
 								console.log(r.responseText);
-								mensajeError(
-									"Algo salio mal,  contacte al administrador."
-								);
+								mensajeError("Algo salio mal,  contacte al administrador.");
 							},
 						});
 					},
@@ -1045,9 +906,7 @@ $(document).ready(function () {
 								},
 								error: function (r) {
 									console.log(r.responseText);
-									mensajeError(
-										"Algo salio mal,  contacte al administrador."
-									);
+									mensajeError("Algo salio mal,  contacte al administrador.");
 								},
 							});
 						}
@@ -1090,9 +949,7 @@ $(document).ready(function () {
 								},
 								error: function (r) {
 									console.log(r.responseText);
-									mensajeError(
-										"Algo salio mal,  contacte al administrador."
-									);
+									mensajeError("Algo salio mal,  contacte al administrador.");
 								},
 							});
 						}
@@ -1135,9 +992,7 @@ $(document).ready(function () {
 								},
 								error: function (r) {
 									console.log(r.responseText);
-									mensajeError(
-										"Algo salio mal,  contacte al administrador."
-									);
+									mensajeError("Algo salio mal,  contacte al administrador.");
 								},
 							});
 						}
@@ -1154,12 +1009,7 @@ $(document).ready(function () {
 		var nombreServicio = $(divForm).find("#nombreServicio").text();
 		var form = $("#formEnviarAlmacen");
 
-		if (
-			nombreServicio.includes("ENSACADO") ||
-			nombreServicio.includes("ALMACENAJE") ||
-			nombreServicio.includes("TRASPALEO") ||
-			nombreServicio.includes("REEMPAQUE")
-		) {
+		if (nombreServicio.includes("ENSACADO") || nombreServicio.includes("ALMACENAJE") || nombreServicio.includes("TRASPALEO") || nombreServicio.includes("REEMPAQUE")) {
 			var select = $(form).find("#selectAlmacen");
 			console.log("select");
 			console.log(select);
@@ -1174,18 +1024,10 @@ $(document).ready(function () {
 						if (r.length != 0) {
 							$(r).each(function (i, v) {
 								// indice, valor
-								select.append(
-									'<option value="' +
-										v.id +
-										'">' +
-										v.nombre +
-										"</option>"
-								);
+								select.append('<option value="' + v.id + '">' + v.nombre + "</option>");
 							});
 						} else {
-							select.append(
-								'<option value="" disabled>No hay almacenes registrados</option>'
-							);
+							select.append('<option value="" disabled>No hay almacenes registrados</option>');
 						}
 					}
 				},
@@ -1193,9 +1035,7 @@ $(document).ready(function () {
 					alert("Algo salio mal, contacte al Administrador.");
 				},
 			});
-			$(form)
-				.find($("#idServicioEnviar"))
-				.val($(divForm).find("#idServicio").val());
+			$(form).find($("#idServicioEnviar")).val($(divForm).find("#idServicio").val());
 			$(form).find($("#operacionEnviar")).val("E");
 			$("#enviarAlmacenModal").modal("show");
 		}
@@ -1232,9 +1072,7 @@ $(document).ready(function () {
 								},
 								error: function (r) {
 									console.log(r.responseText);
-									mensajeError(
-										"Algo salio mal,  contacte al administrador."
-									);
+									mensajeError("Algo salio mal,  contacte al administrador.");
 								},
 							});
 						},
@@ -1282,9 +1120,7 @@ $(document).ready(function () {
 		if (cant != "" && almacen != "") {
 			$("#divAlmacenes").clone().appendTo("#formEnviarAlmacen");
 			var div = $("#formEnviarAlmacen #divAlmacenes").last();
-			$(div).append(
-				'<div id="eliminarAlmacen" class="pt-1"><span class="fa-solid fa-xmark i-pdf material-icons"></span></div>'
-			);
+			$(div).append('<div id="eliminarAlmacen" class="pt-1"><span class="fa-solid fa-xmark i-pdf material-icons"></span></div>');
 			$(div).find("#cantidadEnviar").val("");
 		} else {
 			mensajeError("Debe agregar al menos un movimiento.");
@@ -1319,25 +1155,13 @@ $(document).ready(function () {
 							$("#pesoBruto").val(htmlNum(r.EntPesoB));
 							$("#pesoTara").val(htmlNum(r.EntPesoT));
 							$("#horaPeso").val(r.EntHoraE);
-							$("#fechaPeso").val(
-								formatDateToString(new Date(r.EntFechaE))
-							);
+							$("#fechaPeso").val(formatDateToString(new Date(r.EntFechaE)));
 							$("#horaPesoSalida").val(r.EntHoraS);
-							$("#fechaPesoSalida").val(
-								formatDateToString(new Date(r.EntFechaS))
-							);
-							$("#pesoNeto").val(
-								htmlNum(parseInt(r.EntPesoB) - parseInt(r.EntPesoT))
-							);
+							$("#fechaPesoSalida").val(formatDateToString(new Date(r.EntFechaS)));
+							$("#pesoNeto").val(htmlNum(parseInt(r.EntPesoB) - parseInt(r.EntPesoT)));
 							calcularPesos();
 						} else {
-							mensajeError(
-								"Numero de ferrotolva no coincide.</br><span><b> Número Ticket: </b>" +
-									ticket +
-									"</span></br><span><b> FT/AT: </b>" +
-									r.EntPlacas +
-									"</span>"
-							);
+							mensajeError("Numero de ferrotolva no coincide.</br><span><b> Número Ticket: </b>" + ticket + "</span></br><span><b> FT/AT: </b>" + r.EntPlacas + "</span>");
 							$("#ticket").addClass("required").val("");
 							$("#divPesos").find("input").val("");
 						}
@@ -1418,13 +1242,7 @@ $(document).ready(function () {
 		e.preventDefault();
 		var id = tr.find("#idServicio").html();
 		if (id != "") {
-			window.open(
-				serv +
-					"?controller=Servicios&action=imprimirServicio&&idServ=" +
-					id,
-				"Imprimir servicio",
-				"width=1300,height=600"
-			);
+			window.open(serv + "?controller=Servicios&action=imprimirServicio&&idServ=" + id, "Imprimir servicio", "width=1300,height=600");
 		}
 	});
 
@@ -1514,43 +1332,9 @@ $(document).ready(function () {
 		prevText: "< Ant",
 		nextText: "Sig >",
 		currentText: "Hoy",
-		monthNames: [
-			"Enero",
-			"Febrero",
-			"Marzo",
-			"Abril",
-			"Mayo",
-			"Junio",
-			"Julio",
-			"Agosto",
-			"Septiembre",
-			"Octubre",
-			"Noviembre",
-			"Diciembre",
-		],
-		monthNamesShort: [
-			"Ene",
-			"Feb",
-			"Mar",
-			"Abr",
-			"May",
-			"Jun",
-			"Jul",
-			"Ago",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dic",
-		],
-		dayNames: [
-			"Domingo",
-			"Lunes",
-			"Martes",
-			"Miércoles",
-			"Jueves",
-			"Viernes",
-			"Sábado",
-		],
+		monthNames: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+		monthNamesShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+		dayNames: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
 		dayNamesShort: ["Dom", "Lun", "Mar", "Mié", "Juv", "Vie", "Sáb"],
 		dayNamesMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"],
 		weekHeader: "Sm",
@@ -1581,10 +1365,12 @@ function cambiaFerrotolva(ferrotolva) {
 	var ferro = ferrotolva; //$(this).val();
 	var seccionCamion = $("#seccionCamion");
 	var seccionFerrotolva = $("#seccionFerrotolva");
+	console.log("cambiaFerro serv");
+	$("#numeroUnidad").unbind();
+	$(".emsg").addClass("hidden");
+	$("#numeroUnidad").removeClass("emsg_input");
 	if (ferro == "F") {
-		$("#transportistaTren")
-			.attr("name", "transportista")
-			.val("Kansas City Southern De Mexico");
+		$("#transportistaTren").attr("name", "transportista").val("Kansas City Southern De Mexico");
 		$("#transportista").removeAttr("name").val("");
 		$(seccionCamion).attr("hidden", true);
 		$(seccionFerrotolva).attr("hidden", false);
@@ -1603,6 +1389,31 @@ function cambiaFerrotolva(ferrotolva) {
 					$(this).hide();
 				}
 			});
+		$(".section-cliente").hide();
+		$("#numeroUnidad").on("keypress keydown keyup", function () {
+			if ($('input[name="ferrotolva"]:checked').val() == "F") {
+				if ($(this).val().length > 10) {
+					$(this).val($(this).val().substring(0, 10));
+				}
+				if (!$(this).val().match($regexname) || $(this).val().length != 10) {
+					// there is a mismatch, hence show the error message
+					$(".emsg").removeClass("hidden");
+					$(".emsg").show();
+					$("#btnGuardar").hide();
+					$(this).addClass("emsg_input");
+				} else {
+					// else, do not display message
+					$(".emsg").addClass("hidden");
+					$(this).removeClass("emsg_input");
+					$("#btnGuardar").show();
+				}
+			} else {
+				$(".emsg").addClass("hidden");
+				$(this).removeClass("emsg_input");
+				$("#btnGuardar").show();
+			}
+			$(this).val($(this).val().toUpperCase());
+		});
 	} else {
 		$("#transportistaTren").removeAttr("name").val("");
 		$("#transportista").attr("name", "transportista").val("");
@@ -1623,8 +1434,12 @@ function cambiaFerrotolva(ferrotolva) {
 					$(this).show();
 				}
 			});
+		$(".section-cliente").show();
 	}
+
+	$("#numeroUnidad").trigger("keyup");
 }
+
 function quitarComasNumero(value) {
 	const regex = /,/g;
 	if (value != "") {
@@ -1632,6 +1447,7 @@ function quitarComasNumero(value) {
 		return parseFloat(num);
 	}
 }
+
 function htmlNum(num) {
 	return Number(num).toLocaleString("en");
 }

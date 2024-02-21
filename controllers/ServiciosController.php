@@ -16,6 +16,7 @@ require_once models_root . 'servicios/bascula.php';
 require_once models_root . 'servicios/servicio_entrada.php';
 require_once models_root . 'servicios/servicio_ensacado.php';
 require_once models_root . 'servicios/servicio_movimiento_almacen.php';
+require_once models_root . 'erp/notificaciones.php';
 
 class serviciosController
 {
@@ -373,6 +374,9 @@ class serviciosController
             } else {
                 if (!$id) {
                     $r = $ensacado->save();
+                    /* ENVIA NOTIFICACION AL EQUIPO */
+                    $notificacion = new Notificacion();
+                    $notificacion->sendNotificacionesByCveNoti('entradaunidad', 'Número de unidad: ' . $numeroFerro);
                     if ($r) {
                         $result = [
                             'error'   => true,

@@ -35,7 +35,7 @@ const getServicios = () => {
             if (servicios[x].hopper != hopper) {
                 hopper = servicios[x].hopper
                 htmlservicios += /*html*/ `
-                                                <div class='col '>
+                                                <div class='col${((servicios.length > 4) ? '-md-4' : '')}'>
                                                             <div class='card sombra'>
                                                                   <div class='card-content'>
                                                                         <div class='card-header'>
@@ -579,7 +579,6 @@ function formatDate(date) {
         ].join(":")
     );
 }
-
 const validaCampos = () => {
     let faltan = false;
     $("#pesoCliente").removeClass("invalid").removeClass("checked");
@@ -725,17 +724,17 @@ function detenerServicio(id, almacen_id = "1") {
             cargaspendientes = r;
             let servicio = servicios.filter(el => el.id_servicio == id)[0];
             console.log(cargaspendientes);
-            if (cargaspendientes.cargaspendientes[0].pendientes == "1") {
+            if ((cargaspendientes.cargaspendientes[0].pendientes == "1") && (servicio.puertas > 0)) {
                 var html = `
-                        <div class='row' id="contenedor">
-                            <div class='col-10'>
+                        <div class='row'>
+                            <div class='col-11'>
                                 <h3>Favor de ingresar los sellos de la caja</h3>
                             </div>
                         </div>`;
                 for (var x = 0; x < cargaspendientes.cargaspendientes[0].cant_puertas; x++) {
                     html += `
                                 <div class='row'>
-                                    <div class='col-10'>
+                                    <div class='col-11'>
 
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">Sello ${x+1}</div>
@@ -749,7 +748,7 @@ function detenerServicio(id, almacen_id = "1") {
                 }
                 html += `
                         <div class='row'>
-                            <div class='col-10'>
+                            <div class='col-11'>
                                 <canvas id="canvas">Su navegador no soporta canvas :( </canvas>     
                             </div>
                         </div>
@@ -762,7 +761,6 @@ function detenerServicio(id, almacen_id = "1") {
                     denyButtonText: `Cancelar`,
                     didOpen: () => {
                         iniciaCanvas();
-                        $("#contenedor").parents(".swal2-html-container").attr("style", "overflow: hidden !important;");
                     }
                 }).then((result) => {
                     /* Read more about isConfirmed, isDenied below */
@@ -848,10 +846,8 @@ function detenerServicio(id, almacen_id = "1") {
                                         getServicios();
                                     },
                                     error: function(r) {
-                                        //console.log(r.responseText);
-                                        // mensajeError("Algo salio mal,  contacte al administrador.");
-                                        console.log(r);
-                                        erpalert("error", "Algo salio mal", r);
+                                        console.log(r.responseText);
+                                        mensajeError("Algo salio mal,  contacte al administrador.");
                                     },
                                 });
                             },

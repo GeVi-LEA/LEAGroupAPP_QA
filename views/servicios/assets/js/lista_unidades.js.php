@@ -302,10 +302,11 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                     success: function(r) {
                                         console.log(r);
                                         if (r.error != false) {
-                                            erpalert("", "Entrada", r.mensaje);
-                                            var urlreglamento = __url__ + "/views/servicios/reglamento.php?entrada=" + servicio.id;
-                                            window.open(urlreglamento, "_self");
-
+                                            if ((servicio.tipo_transporte_id != "6") && (servicio.tipo_transporte_id != "12")) {
+                                                erpalert("", "Entrada", r.mensaje);
+                                                var urlreglamento = __url__ + "/views/servicios/reglamento.php?entrada=" + servicio.id;
+                                                window.open(urlreglamento, "_self");
+                                            }
                                         } else {
                                             erpalert("error", "Entrada", r.mensaje);
                                             mensajeError(r.mensaje);

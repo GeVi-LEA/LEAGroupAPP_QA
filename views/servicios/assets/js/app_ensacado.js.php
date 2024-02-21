@@ -7,6 +7,7 @@
 ?>
 <script>
 let servicios;
+var sacosxtarima;
 $(document).ready(function() {
     console.log("entra en app ensacado");
     getServicios();
@@ -27,13 +28,12 @@ $(document).ready(function() {
         sacos = ($("#cantidadSacos").val() == "") ? 0 : quitarComasNumero($("#cantidadSacos").val());
 
         total += (sacos * 25);
-        total += ((tarimas * 55) * 25);
+        total += ((tarimas * sacosxtarima) * 25);
 
         bsucia = ($("#BarreduraSucia").val() == "") ? 0 : quitarComasNumero($("#BarreduraSucia").val());
         blimpia = ($("#BarreduraLimpia").val() == "") ? 0 : quitarComasNumero($("#BarreduraLimpia").val());
         console.log("total: ", total, " bsucia: ", bsucia, " blimpia: ", blimpia);
-        cantenviar = (parseInt(total) - (parseInt(bsucia) + parseInt(blimpia)));
-
+        cantenviar = parseInt(total); //- (parseInt(bsucia) + parseInt(blimpia));
 
         $("#cantidadEnviar").val(cantenviar);
         $("#cantidadEnviar").trigger("blur");
@@ -75,7 +75,7 @@ const getServicios = () => {
                                                                                                       <h6 class='card-title'>${servicios[x].producto}(${servicios[x].lote}) <br /> ${servicios[x].cliente}</h6>
                                                                                                       <span hidden>${servicios[x].ticket}</span>
                                                                                                       <div class='botones'>
-                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+',\''+servicios[x].ticket+'\')">play_arrow</span>' )}
+                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\',\''+servicios[x].sacoxtarima+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+',\''+servicios[x].ticket+'\')">play_arrow</span>' )}
                                                                                                             
                                                                                                       </div>
                                                                                                       <h6 class='card-subtitle text-muted'><i>TIPO SERVICIO(${servicios[x].empaque})</i></h6>
@@ -83,6 +83,7 @@ const getServicios = () => {
                                                                                                             <p><strong>Rótulo:</strong> ${servicios[x].rotulo}</p>
                                                                                                             <p><strong>Fecha Programacion:</strong> ${servicios[x].fecha_programacion}</p>
                                                                                                             <p><strong>Cantidad:</strong> ${servicios[x].kilos} KG</p>
+                                                                                                            <p><strong>Sacos X Tarima:</strong> ${servicios[x].sacoxtarima}</p>
                                                                                                             ${(servicios[x].fecha_inicio !="" ? '<p><strong>Fecha Inicio:</strong> '+servicios[x].fecha_inicio+'</p><p><strong>Tiempo Operacion:</strong> '+servicios[x].tiempo_operacion+'</p>':'' )}
                                                                                                             
                                                                                                             <!-- <p><strong><i>Bultos:</strong> ${servicios[x].bultos} </i> <strong><i>Tarimas:</strong> ${servicios[x].tarimas}</i> <strong><i>Parcial:</strong> ${servicios[x].parcial}</i></p>
@@ -655,7 +656,10 @@ const validaCampos = () => {
 }
 
 function iniciarServicio(id, ticket) {
-    console.log(id);
+    console.log("id: ", id, " ticket: ", ticket);
+    // if (ticket == "null") {
+    // erpalert("error", "La unidad no ha sido pesada, no se pueden iniciar servicios");
+    // } else {
     $.confirm({
         title: `<span class='material-icons ${(ticket=="" || ticket=="null")? "i-danger": "i-warning"}'>${(ticket=="" || ticket=="null")? "error": "warning"}</span><span>¡Atención!<span>`,
         content: `<b>${(ticket=="" || ticket=="null")? "La unidad no ha sido pesada, ¿Iniciar servicio?": "¿Iniciar servicio?"}</b>`,
@@ -697,12 +701,14 @@ function iniciarServicio(id, ticket) {
             Cancelar: function() {},
         },
     });
+    // }
 }
 
-function detenerServicio(id, cantidad) {
+function detenerServicio(id, cantidad, sacoxtarima) {
     var form = $("#formEnviarAlmacen");
     var select = $(form).find("#selectAlmacen");
     console.log(select);
+    sacosxtarima = sacoxtarima;
     $.ajax({
         url: __url__ + "?ajax&controller=Catalogo&action=getAlmacenes",
         type: "POST",

@@ -351,12 +351,13 @@ class ServicioEntrada
 
     public function save()
     {
-        $sql    = "insert into servicios_entradas values(
-            null /*id  */
-        , {$this->getClienteId()}/*, cliente_id */
+        $sql = 'insert into servicios_entradas values(
+        null /*id  */
+        ,' . (($this->getClienteId() != null) ? $this->getClienteId() : 'null') . "/*, cliente_id */
         , {$this->getEstatusId()}/*, estatus_id */
         , {$this->getTipoTransporteId()}/*, tipo_transporte_id */
         , {$this->getEntrada_Salida()}/*, entrada_salida */
+        , 2 /*, empresa_id */
         , {$this->getTipo_Producto()}/*, tipo_producto */
         , '{$this->getNumUnidad()}' /*, numUnidad */
         , null  /*, fecha_entrada */
@@ -380,12 +381,16 @@ class ServicioEntrada
         , '{$this->getObservaciones()}' /*, observaciones */
         , '{$_SESSION['usuario']->id}' /*, usuario_creacion */
         , now() /*, fecha_creacion */
-        , '' /*, firma_entrada */
-        , '' /*, firma_salida */
+        , '' /* firma_entrada */
+        , '' /* firma_salida */
         , {$this->getCantPuertas()} /*, cant_puertas */
         , {$this->getTranspLeaCliente()} /*, transp_lea_cliente */
         ,'' /*, sellos */
          )";
+        // print_r('<pre>');
+        // print_r($sql);
+        // print_r('</pre>');
+
         $save   = $this->db->query($sql);
         $result = false;
         if ($save) {
@@ -447,13 +452,20 @@ class ServicioEntrada
             if ($idEst == 5) {
                 $sql = " where estatus_id = {$idEst} /*and se.fecha_salida >= DATE_ADD(curdate(), INTERVAL -1 month)*/ order by se.id desc";
             } elseif ($idEst == 11 and $pendientePeso = 1) {
-                $sql = " where estatus_id = {$idEst} and se.ticket is null and c.peso_bascula_ffcc = 1 and c.peso_bascula_cam = 1 order by se.fecha_entrada desc";
+                $sql = " where estatus_id = {$idEst} and se.peso_obligatorio = 1 and se.ticket is null and c.peso_bascula_ffcc = 1 and c.peso_bascula_cam = 1 order by se.fecha_entrada desc";
             } elseif ($idEst == 14) {
-                $sql = '  where se.estatus_id = 11 #and (ticket is not null or tipo_transporte_id in(12)) 
-                                          and se.id in (select entrada_id from servicios_ensacado serv where serv.servicio_id in (1,5) and serv.estatus_id not in(0) and serv.estatus_id not in(1,3,13) )
-                                          order by se.fecha_entrada desc';
+                $sql = " where se.estatus_id in( 11, 3) #and (ticket is not null or tipo_transporte_id in(12)) 
+                            #and se.id in (select entrada_id from servicios_ensacado serv where serv.servicio_id in (5) and serv.estatus_id not in(0) and serv.estatus_id not in(1,3,13) )
+                            and se.id in(
+                                select entrada_id
+                                from servicios_ensacado serv 
+                                where serv.entrada_id = se.id
+                                and serv.estatus_id not in(3)
+                            )
+                            and se.estatus_bascula = 'C'
+                            order by se.fecha_entrada desc";
             } elseif ($idEst == 15) {
-                $sql = '  where se.estatus_id = 14 order by se.fecha_entrada desc';
+                $sql = '  where se.estatus_id in(5, 14) order by se.fecha_entrada desc';
             } else {
                 $sql = " where estatus_id in( {$idEst}) order by se.id desc";
             }
@@ -530,8 +542,10 @@ class ServicioEntrada
 
     public function salidaUnidad()
     {
+        // $sql = 'update servicios_entradas set '
+        // . " fecha_salida = NOW(), estatus_id = 14 where id={$this->getId()}";
         $sql = 'update servicios_entradas set '
-            . " fecha_salida = NOW(), estatus_id = 14 where id={$this->getId()}";
+            . " fecha_salida = NOW(), estatus_id = 5 where id={$this->getId()}";
         $save   = $this->db->query($sql);
         $result = false;
         if ($save) {
@@ -634,12 +648,15 @@ class ServicioEntrada
 
     public function updateSellos()
     {
-        $sql    = "update servicios_entradas set 
+        $sql = "update servicios_entradas set 
         sellos = '{$this->getSellos()}'
         , sello2 = '{$this->getSello2()}'
         , sello3 = '{$this->getSello3()}'
         , firma_salida = '{$this->getFirma_salida()}'
         where id = {$this->getId()}";
+        // print_r('<pre>');
+        // print_r($sql);
+        // print_r('</pre>');
         $save   = $this->db->query($sql);
         $result = false;
         if ($save) {
