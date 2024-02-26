@@ -357,17 +357,19 @@ class ServicioEntrada
         , {$this->getEstatusId()}/*, estatus_id */
         , {$this->getTipoTransporteId()}/*, tipo_transporte_id */
         , {$this->getEntrada_Salida()}/*, entrada_salida */
-        , 2 /*, empresa_id */
+        , 2/*, empresa */
         , {$this->getTipo_Producto()}/*, tipo_producto */
         , '{$this->getNumUnidad()}' /*, numUnidad */
-        , null  /*, fecha_entrada */
+        , now()  /*, fecha_entrada */
         , null /*, fecha_salida */
         , null /*, fecha_liberacion */
         , '{$this->getTransportista()}' /*, transportista */
         , '{$this->getChofer()}' /*, chofer */
         , '{$this->getPlaca1()}' /*, placa1 */
         , '{$this->getPlaca2()}' /*, placa2 */
+        , 0 /*, peso_obligatorio */        
         ,  {$this->getTicket()} /*, ticket */
+        , null /*, estatus_bascula */
         ,  {$this->getPesoCliente()} /*, peso_cliente */
         ,  {$this->getPesoTara()} /*, peso_tara */
         ,  {$this->getPesoTeorico()} /*, peso_teorico */
@@ -420,7 +422,7 @@ class ServicioEntrada
                 ,(SELECT count(*) FROM servicios_ensacado where entrada_id = se.id and estatus_id not in(0, 5)) serv_pendientes
                 from servicios_entradas se  
                 inner join catalogo_estatus es on es.id = se.estatus_id 
-                inner join catalogo_clientes c on c.id = se.cliente_id ';
+                left join catalogo_clientes c on c.id = se.cliente_id ';
 
         if ($where != null) {
             $sql .= $where;
@@ -609,9 +611,9 @@ class ServicioEntrada
     public function unidadRegistrada()
     {
         if (!$this->getId()) {
-            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id != 5";
+            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id not in(0, 5)";
         } else {
-            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id != 5 and id !=  {$this->getId()}";
+            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id not in(0, 5) and id !=  {$this->getId()}";
         }
         return $this->db->query($sql);
     }

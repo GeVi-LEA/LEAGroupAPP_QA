@@ -334,7 +334,7 @@ class serviciosController
         $tipo_producto      = isset($_POST['tipo_producto']) && $_POST['tipo_producto'] != '' ? $_POST['tipo_producto'] : 0;
         $entrada_salida     = isset($_POST['entrada_salida']) && $_POST['entrada_salida'] != '' ? $_POST['entrada_salida'] : 0;
 
-        $estatus = 1;
+        $estatus = 11;
 
         if ($numeroFerro) {
             $ensacado = new ServicioEntrada();
@@ -364,6 +364,7 @@ class serviciosController
             $ensacado->setEntrada_Salida($transp_lea_cliente);
             $ensacado->setTipo_Producto($transp_lea_cliente);
             $ensacado->setEstatusId($estatus);
+            // $ensacado->setFechaEntrada('NOW()');
 
             $f = $ensacado->unidadRegistrada();
             if ($f->num_rows >= 1) {
@@ -374,6 +375,7 @@ class serviciosController
             } else {
                 if (!$id) {
                     $r = $ensacado->save();
+                    // $ensacado->ingresarUnidad();
                     /* ENVIA NOTIFICACION AL EQUIPO */
                     $notificacion = new Notificacion();
                     $notificacion->sendNotificacionesByCveNoti('entradaunidad', 'Número de unidad: ' . $numeroFerro);
@@ -908,6 +910,9 @@ class serviciosController
             $servicio->setId($id);
             $r = $servicio->ingresarUnidad();
             if ($r) {
+                /* ENVIA NOTIFICACION AL EQUIPO */
+                $notificacion = new Notificacion();
+                $notificacion->sendNotificacionesByCveNoti('entradaunidad', 'Número de unidad: ' . $_POST['numUnidad']);
                 $result = [
                     'error'   => true,
                     'mensaje' => 'Se registro la entrada de la unidad.'

@@ -205,6 +205,29 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                                       <strong class="mr-1"># Unidad:</strong><input type="text" name="numeroUnidad" id="numeroUnidad" class="item-medium item" value="${servicio.numUnidad}" readonly/> 
                                                 </div>
                                           </div>
+                                          <div class="form-group row">
+                                                <div class="col-12 ">
+                                                    <strong class="mr-1">Producto:</strong>
+                                                    <div id="divRadiosT" class="div-radiosT">
+                                                        <div class='row'>
+                                                            <div class='col'>
+                                                                <strong for="tipo_producto">Polietileno:</strong>
+                                                            </div>
+                                                            <div class='col'>
+                                                                <input class="ml-1 mr-3" id="tipo_producto" type="radio" name="tipo_producto" value="0" ${(servicio.tipo_producto == 0) ? 'checked' : ''} />
+                                                            </div>
+                                                        </div>
+                                                        <div class='row'>
+                                                            <div class='col'>
+                                                                <strong for="tipo_productoL">Lubricante:</strong>
+                                                            </div>
+                                                            <div class='col'>
+                                                                <input class="ml-1" type="radio" id="tipo_productoL" name="tipo_producto" value="1" ${(servicio.tipo_producto == 1) ? 'checked' : '' } />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                          </div>
                                            <h4 class="form-section"><i class="ft-user"></i> Datos Cliente</h4>
                                           <div class="form-group row mt-2">
                                                 <div class="col-12 datos mt-2 mb-1">
@@ -294,7 +317,8 @@ const accionEtapa = (idserv, tipoUnidad) => {
 
                                 $.ajax({
                                     data: {
-                                        id: servicio.id
+                                        id: servicio.id,
+                                        numUnidad: servicio.numUnidad,
                                     },
                                     url: __url__ + "?ajax&controller=Servicios&action=ingresarUnidad",
                                     type: "POST",
@@ -683,6 +707,7 @@ function formatDate(date) {
         ].join(":")
     );
 }
+
 const validaCampos = () => {
     let faltan = false;
     $("#pesoCliente").removeClass("invalid").removeClass("checked");
@@ -733,6 +758,7 @@ const validaCampos = () => {
     // $("#cliente").val()
     return faltan;
 }
+
 $("#tara").blur(function() {
     if (isNumeric($(this).val())) {
         calcularPesos();
@@ -740,6 +766,7 @@ $("#tara").blur(function() {
         mensajeError("Peso debe de ser numerico.");
     }
 });
+
 $("#pesoCliente").blur(function() {
     if (isNumeric($(this).val())) {
         calcularPesos();
