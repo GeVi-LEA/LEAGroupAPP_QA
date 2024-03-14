@@ -14,7 +14,7 @@ $(document).ready(function() {
     });
     $(".btn-Alta").click(function() {
         jQuery.ajax({
-            url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+            url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
             data: {
 
             },
@@ -178,7 +178,7 @@ $(document).ready(function() {
                     var datosForm = new FormData($("#ensacadoForm")[0]);
                     console.log(datosForm);
                     jQuery.ajax({
-                        url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                        url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                         data: datosForm,
                         processData: false,
                         contentType: false,
@@ -277,7 +277,7 @@ const validaCampos = () => {
 let cantidades;
 const validaCantidades = () => {
     jQuery.ajax({
-        url: __url__ + '?ajax&controller=Servicios&action=getCantidadesServicios',
+        url: __url_app__ + '?ajax&controller=Servicios&action=getCantidadesServicios',
         data: {},
         method: 'post',
         dataType: "json",

@@ -44,7 +44,7 @@ $(document).ready(function() {
 const getServicios = () => {
     $("#enviarAlmacenModal1").modal("hide");
     $.ajax({
-        url: __url__ + "?ajax&controller=Servicios&action=getServDescargas",
+        url: __url_app__ + "?ajax&controller=Servicios&action=getServDescargas",
         data: {
 
         },
@@ -65,6 +65,7 @@ const getServicios = () => {
                                                                   <div class='card-content'>
                                                                         <div class='card-header'>
                                                                               <h4 class='card-title'>${servicios[x].hopper}(HOPPER)</h4>
+                                                                              <input type="hidden" class="numeroUnidad" value="${servicios[x].hopper}"/>
                                                                         </div>
                                                                         <div class='card-body p-0'>
                                                                               <h6 class='card-subtitle text-muted'></h6>
@@ -85,10 +86,16 @@ const getServicios = () => {
                                                                                                             <p><strong>Cantidad:</strong> ${servicios[x].kilos} KG</p>
                                                                                                             <p><strong>Sacos X Tarima:</strong> ${servicios[x].sacoxtarima}</p>
                                                                                                             ${(servicios[x].fecha_inicio !="" ? '<p><strong>Fecha Inicio:</strong> '+servicios[x].fecha_inicio+'</p><p><strong>Tiempo Operacion:</strong> '+servicios[x].tiempo_operacion+'</p>':'' )}
+                                                                                                            <p></p>
+                                                                                                            <p>
+                                                                                                                <strong>Orden:</strong>
+                                                                                                                <i id="show" class="i-pdf material-icons fa-solid fa-file-pdf" title="Ver orden" 
+                                                                                                                    ${typeof(servicios[x].doc_orden)} ${(((typeof(servicios[x].doc_orden) == "undefined") || servicios[x].doc_orden=="") ? 'hidden' : '')} 
+                                                                                                                    data-documento="${servicios[x].doc_orden}">
+                                                                                                                </i>
+                                                                                                            </p>
                                                                                                             
                                                                                                             <!-- <p><strong><i>Bultos:</strong> ${servicios[x].bultos} </i> <strong><i>Tarimas:</strong> ${servicios[x].tarimas}</i> <strong><i>Parcial:</strong> ${servicios[x].parcial}</i></p>
-                                                                                                            <p></p>
-                                                                                                            <p></p>
                                                                                                             !-- <p><strong>Fecha Inicio:</strong>HOY</p>
                                                                                                             <p><strong>Operador:</strong>Gerardo Villarreal</p>-->
                                                                                                       </div>
@@ -137,7 +144,7 @@ const getServicios = () => {
         }
 
         $(".panelunidades").html(htmlservicios);
-
+        abredocs();
 
 
 
@@ -168,7 +175,7 @@ const accionEtapa = (idserv) => {
                         data: {
                             id: idserv
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=transitoUnidad",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=transitoUnidad",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -201,7 +208,7 @@ const accionEtapa = (idserv) => {
                 return e.id === idserv;
             });;
             jQuery.ajax({
-                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
                 data: {
 
                 },
@@ -321,7 +328,7 @@ const accionEtapa = (idserv) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -336,7 +343,7 @@ const accionEtapa = (idserv) => {
                                     data: {
                                         id: servicio.id
                                     },
-                                    url: __url__ + "?ajax&controller=Servicios&action=ingresarUnidad",
+                                    url: __url_app__ + "?ajax&controller=Servicios&action=ingresarUnidad",
                                     type: "POST",
                                     dataType: "json",
                                     success: function(r) {
@@ -381,7 +388,7 @@ const accionEtapa = (idserv) => {
                 return e.id === idserv;
             });;
             jQuery.ajax({
-                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
                 data: {
 
                 },
@@ -548,7 +555,7 @@ const accionEtapa = (idserv) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -678,7 +685,7 @@ function iniciarServicio(id, ticket) {
                         data: {
                             id: id
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=iniciarServicio",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=iniciarServicio",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -710,7 +717,7 @@ function detenerServicio(id, cantidad, sacoxtarima) {
     console.log(select);
     sacosxtarima = sacoxtarima;
     $.ajax({
-        url: __url__ + "?ajax&controller=Catalogo&action=getAlmacenes",
+        url: __url_app__ + "?ajax&controller=Catalogo&action=getAlmacenes",
         type: "POST",
         dataType: "json",
         success: function(r) {
@@ -761,7 +768,7 @@ function detenerServicio(id, cantidad, sacoxtarima) {
                         action: function() {
                             $.ajax({
                                 data: $("#formEnviarAlmacen").serialize(),
-                                url: "?ajax&controller=Servicios&action=finalizarServicio",
+                                url: __url_erp__ + "?ajax&controller=Servicios&action=finalizarServicio",
                                 type: "POST",
                                 dataType: "json",
                                 success: function(r) {
@@ -788,7 +795,31 @@ function detenerServicio(id, cantidad, sacoxtarima) {
         }
     });
 }
+var ladiv;
 
+function abredocs() {
+    $(".panelunidades").unbind();
+    $(".panelunidades").on("click", "#show", function() {
+        ladiv = $(this);
+        var div = $(this).parent("div");
+        var ferro = ladiv.parents(".sombra").find(".numeroUnidad").val(); //$("#numeroUnidad").val();
+        var docInput = $(div).children("input")[2];
+        console.log("docInput: ", docInput);
+        console.log($(this).data("documento"));
+
+        var doc = $(docInput).val();
+        if (typeof $(this).data("documento") !== "undefined" && $(this).data("documento").length > 0) {
+            doc = $(this).data("documento");
+        }
+        console.log("doc: ", doc);
+        $("#tituloDocumento").html("Archivo: " + doc);
+        var url = __url_erp__ + "views/servicios/uploads/" + ferro + "/" + doc;
+        console.log("url: ", url);
+        $("#viewDoc").append('<object class="view-doc" id="objDoc" data=""></object>');
+        $("#objDoc").attr("data", url);
+        $("#modalDocumento").modal("show");
+    });
+}
 
 function validarDatosEnviarAlmacen() {
     var form = $("#formEnviarAlmacen");

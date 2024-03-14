@@ -19,7 +19,7 @@ $(document).ready(function() {
 const getServicios = () => {
     $("#enviarAlmacenModal1").modal("hide");
     $.ajax({
-        url: __url__ + "?ajax&controller=Servicios&action=getServCargas",
+        url: __url_app__ + "?ajax&controller=Servicios&action=getServCargas",
         data: {
 
         },
@@ -36,7 +36,7 @@ const getServicios = () => {
                 hopper = servicios[x].hopper
                 htmlservicios += /*html*/ `
                                                 <div class='col${((servicios.length > 4) ? '-md-4' : '')}'>
-                                                            <div class='card sombra'>
+                                                            <div class='card sombra' >
                                                                   <div class='card-content'>
                                                                         <div class='card-header'>
                                                                               <h4 class='card-title'>${servicios[x].hopper} - ${servicios[x].transportista} - ${servicios[x].chofer} </h4>
@@ -44,7 +44,7 @@ const getServicios = () => {
                                                                         <div class='card-body p-0'>
                                                                               <h6 class='card-subtitle text-muted'></h6>
                                                                               <div class='card-body'>
-                                                                                    <div class='card servicio ${servicios[x].estatus_operacion}'>
+                                                                                    <div class='card servicio ${servicios[x].estatus_operacion}' style="border: 8px solid ${servicios[x].colorweb}; border-radius: 20px;">
                                                                                           <div class='card-content'>
                                                                                                 <div class='card-body p-0'>
                                                                                                       <h6 class='card-title'><strong>Producto:</strong>${servicios[x].producto} - <strong>Lote:</strong>${servicios[x].lote} - <strong>Almacén:</strong>${(servicios[x].almacen!="")?'<i>'+servicios[x].almacen+'</i>':""} <br /> ${servicios[x].cliente}</h6>
@@ -69,7 +69,7 @@ const getServicios = () => {
                                                                                     </div>                                                                                    
                                           `;
             } else {
-                htmlservicios += /*html*/ `<div class='card servicio ${servicios[x].estatus_operacion}'>
+                htmlservicios += /*html*/ `<div class='card servicio ${servicios[x].estatus_operacion}'  style="border: 8px solid ${servicios[x].colorweb}; border-radius: 20px;">
                                                       <div class='card-content'>
                                                             <div class='card-body p-0'>
                                                                   <h6 class='card-title'><strong>Producto:</strong>${servicios[x].producto} - <strong>Lote:</strong>${servicios[x].lote} - <strong>Almacén:</strong>${(servicios[x].almacen!="")?'<i>'+servicios[x].almacen+'</i>':""} <br /> ${servicios[x].cliente}</h6>
@@ -143,7 +143,7 @@ const accionEtapa = (idserv) => {
                         data: {
                             id: idserv
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=transitoUnidad",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=transitoUnidad",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -176,7 +176,7 @@ const accionEtapa = (idserv) => {
                 return e.id === idserv;
             });;
             jQuery.ajax({
-                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
                 data: {
 
                 },
@@ -296,7 +296,7 @@ const accionEtapa = (idserv) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -311,7 +311,7 @@ const accionEtapa = (idserv) => {
                                     data: {
                                         id: servicio.id
                                     },
-                                    url: __url__ + "?ajax&controller=Servicios&action=ingresarUnidad",
+                                    url: __url_app__ + "?ajax&controller=Servicios&action=ingresarUnidad",
                                     type: "POST",
                                     dataType: "json",
                                     success: function(r) {
@@ -356,7 +356,7 @@ const accionEtapa = (idserv) => {
                 return e.id === idserv;
             });;
             jQuery.ajax({
-                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
                 data: {
 
                 },
@@ -523,7 +523,7 @@ const accionEtapa = (idserv) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -650,7 +650,7 @@ function iniciarServicio(id) {
                         data: {
                             id: id
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=iniciarServicio",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=iniciarServicio",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -679,7 +679,7 @@ function detenerServicio(id, almacen_id = "1") {
     var form = $("#formEnviarAlmacen");
     var select = $(form).find("#selectAlmacen");
     $.ajax({
-        url: __url__ + "?ajax&controller=Catalogo&action=getAlmacenes",
+        url: __url_app__ + "?ajax&controller=Catalogo&action=getAlmacenes",
         type: "POST",
         dataType: "json",
         success: function(r) {
@@ -716,7 +716,7 @@ function detenerServicio(id, almacen_id = "1") {
         data: {
             id: id,
         },
-        url: __url__ + "?ajax&controller=Servicios&action=getCargasPendientes",
+        url: __url_app__ + "?ajax&controller=Servicios&action=getCargasPendientes",
         type: "POST",
         dataType: "json",
         success: function(r) {

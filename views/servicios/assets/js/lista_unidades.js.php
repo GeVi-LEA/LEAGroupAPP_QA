@@ -15,7 +15,7 @@ $(document).ready(function() {
 
 const getUnidades = () => {
     $.ajax({
-        url: __url__ + "?ajax&controller=Servicios&action=getUnidadesAPP",
+        url: __url_app__ + "?ajax&controller=Servicios&action=getUnidadesAPP",
         data: {
             idEst: "<?php echo $idEst; ?>",
             PesoPend: "<?php echo $PesoPend; ?>",
@@ -99,7 +99,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         data: {
                             id: idserv
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=transitoUnidad",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=transitoUnidad",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -132,7 +132,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                 return e.id === idserv;
             });;
             jQuery.ajax({
-                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
                 data: {
 
                 },
@@ -304,7 +304,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -320,7 +320,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                         id: servicio.id,
                                         numUnidad: servicio.numUnidad,
                                     },
-                                    url: __url__ + "?ajax&controller=Servicios&action=ingresarUnidad",
+                                    url: __url_erp__ + "?ajax&controller=Servicios&action=ingresarUnidad",
                                     type: "POST",
                                     dataType: "json",
                                     success: function(r) {
@@ -328,7 +328,36 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                         if (r.error != false) {
                                             if ((servicio.tipo_transporte_id != "6") && (servicio.tipo_transporte_id != "12")) {
                                                 erpalert("", "Entrada", r.mensaje);
-                                                var urlreglamento = __url__ + "/views/servicios/reglamento.php?entrada=" + servicio.id;
+                                                var urlreglamento = __url_app__ + "/views/servicios/reglamento.php?entrada=" + servicio.id;
+                                                window.open(urlreglamento, "_self");
+                                            }
+                                        } else {
+                                            erpalert("error", "Entrada", r.mensaje);
+                                            mensajeError(r.mensaje);
+                                        }
+                                        setTimeout(() => {
+                                            getUnidades();
+                                        }, 500);
+                                    },
+                                    error: function(r) {
+                                        console.log(r.responseText);
+                                        mensajeError("Algo salio mal,  contacte al administrador.");
+                                    },
+                                });
+                                $.ajax({
+                                    data: {
+                                        id: servicio.id,
+                                        numUnidad: servicio.numUnidad,
+                                    },
+                                    url: __url_app__ + "?ajax&controller=Servicios&action=ingresarUnidad",
+                                    type: "POST",
+                                    dataType: "json",
+                                    success: function(r) {
+                                        console.log(r);
+                                        if (r.error != false) {
+                                            if ((servicio.tipo_transporte_id != "6") && (servicio.tipo_transporte_id != "12")) {
+                                                erpalert("", "Entrada", r.mensaje);
+                                                var urlreglamento = __url_app__ + "/views/servicios/reglamento.php?entrada=" + servicio.id;
                                                 window.open(urlreglamento, "_self");
                                             }
                                         } else {
@@ -369,7 +398,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                 return e.id === idserv;
             });;
             jQuery.ajax({
-                url: __url__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
+                url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
                 data: {
 
                 },
@@ -538,7 +567,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -585,7 +614,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         data: {
                             id: idserv
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=salidaUnidad",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=salidaUnidad",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -605,14 +634,14 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         },
                     });
                     if (tipoUnidad.includes("local_ship")) {
-                        window.open(__url__ + "?ajax&controller=Servicios&action=ordenSalida&id=" + idserv, "_blank");
+                        window.open(__url_app__ + "?ajax&controller=Servicios&action=ordenSalida&id=" + idserv, "_blank");
                     }
-                    // document.location.href = __url__ + "?ajax&controller=Servicios&action=ordenSalida&id=" + idserv;
+                    // document.location.href = __url_app__ + "?ajax&controller=Servicios&action=ordenSalida&id=" + idserv;
                     // $.ajax({
                     // data: {
                     // id: idserv
                     // },
-                    // url: __url__ + "?controller=Servicios&action=ordenSalida",
+                    // url: __url_app__ + "?controller=Servicios&action=ordenSalida",
                     // type: "POST",
                     // dataType: "json",
                     // success: function(r) {
@@ -655,7 +684,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         data: {
                             id: idserv
                         },
-                        url: __url__ + "?ajax&controller=Servicios&action=liberaUnidad",
+                        url: __url_app__ + "?ajax&controller=Servicios&action=liberaUnidad",
                         type: "POST",
                         dataType: "json",
                         success: function(r) {
@@ -808,7 +837,7 @@ function getPesos() {
                 id: ticket,
                 ferrotolva: ferrotolva
             },
-            url: __url__ + "?ajax&controller=Servicios&action=getPesos",
+            url: __url_app__ + "?ajax&controller=Servicios&action=getPesos",
             type: "POST",
             dataType: "json",
             success: function(r) {

@@ -1,11 +1,11 @@
 var $regexname = /[A-Z]{4}\d{6}/;
 
 $(document).ready(function () {
-	let serv = ""; // = __url__; //"http://localhost/GrupoLEA/";
-	if (typeof __url__ != "undefined") {
-		serv = __url__;
+	let serv = ""; // = __url_app__; //"http://localhost/GrupoLEA/";
+	if (typeof __url_app__ != "undefined") {
+		serv = __url_app__;
 	} else {
-		serv = localStorage.getItem("_URL_"); // = __url__
+		serv = localStorage.getItem("_URL_"); // = __url_app__
 	}
 
 	$("#cancel").hide();
@@ -1457,4 +1457,26 @@ function isNumeric(value) {
 	var num = value.replace(regex, "");
 	var valid = !isNaN(Number(num));
 	return valid;
+}
+
+function getPDFEntrada(idEnt) {
+	$.ajax({
+		// data: $("#formEnviarAlmacen").serialize(),
+		data: {
+			url: __url_app__ + "?controller=Servicios&action=getFormatoEntrada&idEnt=" + idEnt,
+			path: "views/servicios/uploads/" + $("#numeroUnidad").val(),
+			filename: $("#numeroUnidad").val(),
+			mostrar: "true",
+		},
+		url: "?ajax&controller=Servicios&action=imprimirURL",
+		type: "POST",
+		dataType: "json",
+		success: function (r) {
+			console.log(r);
+		},
+		error: function (r) {
+			console.log(r);
+			mensajeError("Algo salio mal,  contacte al administrador.  ");
+		},
+	});
 }

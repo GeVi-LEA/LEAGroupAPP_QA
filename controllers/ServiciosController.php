@@ -906,10 +906,17 @@ class serviciosController
     {
         $id = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : null;
         if ($id != null) {
-            $servicio = new ServicioEntrada();
-            $servicio->setId($id);
-            $r = $servicio->ingresarUnidad();
+            // $servicio = new ServicioEntrada();
+            // $servicio->setId($id);
+            // $r = $servicio->ingresarUnidad();
             if ($r) {
+                // $imp       = $servicio->getById($id);
+                // $_url      = URL . '?controller=Servicios&action=getFormatoEntrada&idEnt=' . $id;
+                // $_path     = 'views/servicios/uploads/' . $imp['numUnidad'];
+                // $_filename = 'registro_' . $imp['numUnidad'];
+                // $_mostrar  = false;
+                // $this->imprimirURL($_url, $_path, $_filename, $_mostrar);
+
                 /* ENVIA NOTIFICACION AL EQUIPO */
                 $notificacion = new Notificacion();
                 $notificacion->sendNotificacionesByCveNoti('entradaunidad', 'Número de unidad: ' . $_POST['numUnidad']);
@@ -1262,5 +1269,54 @@ class serviciosController
         $servicio_entrada->setFirma_entrada($_POST['firma']);
         $respuesta = $servicio_entrada->updateFirmaEntrada();
         echo json_encode(['error' => $respuesta, 'mensaje' => 'Se guardó la firma favor de dar entrada']);
+    }
+
+    public function getFormatoEntrada()
+    {
+        // Utils::noLoggin();
+        $idEnt      = null;
+        $trenArray  = Utils::isTren();
+        $arrayIdsTr = array();
+        foreach ($trenArray as $tr) {
+            array_push($arrayIdsTr, $tr->id);
+        }
+        $ensacado = new ServicioEntrada();
+        if (isset($_GET['idEnt'])) {
+            $idEnt = (int) $_GET['idEnt'];
+        }
+        $ensacado->setId($idEnt);
+        $servicios = $ensacado->getById();
+        require_once views_root . 'servicios/formato_registro.php';
+    }
+
+    public function imprimirURL($_url = '', $_path = '', $_filename = '', $_mostrar = '')
+    {
+        $url      = isset($_POST['url']) ? $_POST['url'] : $_url;
+        $path     = isset($_POST['path']) ? $_POST['path'] : $_path;
+        $filename = isset($_POST['filename']) ? $_POST['filename'] : $_filename;
+        $mostrar  = isset($_POST['mostrar']) ? $_POST['mostrar'] : $_mostrar;
+        require_once utils_root . 'toPDF/pdf.php';
+        $respuesta = PDF::crearPdfEntrada($url, $path, $filename, $mostrar);
+        if ($mostrar) {
+            echo $respuesta;
+        }
+    }
+
+    public function getCarpeta()
+    {
+        // Utils::noLoggin();
+        $idEnt      = null;
+        $trenArray  = Utils::isTren();
+        $arrayIdsTr = array();
+        foreach ($trenArray as $tr) {
+            array_push($arrayIdsTr, $tr->id);
+        }
+        $ensacado = new ServicioEntrada();
+        if (isset($_GET['id'])) {
+            $idEnt = (int) $_GET['id'];
+        }
+        $ensacado->setId($idEnt);
+        $servicios = $ensacado->getById();
+        require_once views_root . 'servicios/carpetas.php';
     }
 }
