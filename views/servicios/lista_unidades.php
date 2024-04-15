@@ -21,6 +21,7 @@ require_once views_root . 'servicios/assets/js/lista_unidades.js.php';
                     <th>FT/AT</th>
                     <th>#Unidad</th>
                     <th>Cliente</th>
+                    <th>Fecha Llegada</th>
                 </thead>
                 <tbody>
                 </tbody>

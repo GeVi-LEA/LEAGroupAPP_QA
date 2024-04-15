@@ -39,6 +39,7 @@ require_once views_root . 'servicios/assets/js/app_ensacado.js.php';
                 <form class="pr-2 pl-2" id="formEnviarAlmacen">
                     <div><input type="hidden" id="idServicioEnviar" name="idServicioEnviar" />
                         <input type="hidden" id="operacionEnviar" name="operacionEnviar" />
+                        <input type="hidden" id="cliente_id" name="cliente_id" />
                     </div>
                     <div class=" " id="divAlmacenes">
                         <div class='row'>
@@ -59,36 +60,53 @@ require_once views_root . 'servicios/assets/js/app_ensacado.js.php';
                             </div>
                         </div>
                         <div class='row'>
-                            <div class='col-md-4 col-12'>
-                                <label for="cantidadEnviar" class="pt-1 pr-1"><strong>Cantidad Total:</strong></label>
-                                <div class="input-group mt-4">
-                                    <input type="text" name="cantidadAlmacen[]" class="item-small form-control numhtml" id="cantidadEnviar" readonly required />
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">Kg.</div>
+                            <div class='col-12'>
+                                <div class='row'>
+                                    <div class='col-md-4 col-12'>
+                                        <label for="cantidadEnviar" class="pt-1 pr-1"><strong>Cantidad Total:</strong></label>
+                                        <div class="input-group mt-4">
+                                            <input type="text" name="cantidadAlmacen[]" class="item-small form-control numhtml convertilbs" id="cantidadEnviar" readonly required />
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Kg.</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class='col-md-4 col-12'>
+                                        <label for="cantidadTarimas" class="pt-1 pr-1"><strong>Cantidad</strong></label>
+                                        <div class="input-group mt-4">
+                                            <input type="text" name="cantidadTarimas[]" class="item-small form-control numhtml" id="cantidadTarimas" required />
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Tarimas</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class='col-md-4 col-12'>
+                                        <label for="cantidadSacos" class="pt-1 pr-1"><strong>Ensacado:</strong></label>
+                                        <div class="input-group mt-4">
+                                            <input type="text" name="cantidadSacos[]" class="item-small form-control numhtml" id="cantidadSacos" required />
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Sacos</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='row'>
+                                    <div class='col-md-4 col-12'>
+                                        <div class="input-group mt-4">
+                                            <input type="text" class="item-small form-control numhtml convertilbs" id="cantidadLBS1" readonly />
+                                            <div class="input-group-prepend">
+                                                <div class="input-group-text">Lbs.</div>
+                                            </div>
+
+                                        </div>
                                     </div>
 
                                 </div>
                             </div>
-                            <div class='col-md-4 col-12'>
-                                <label for="cantidadTarimas" class="pt-1 pr-1"><strong>Cantidad</strong></label>
-                                <div class="input-group mt-4">
-                                    <input type="text" name="cantidadTarimas[]" class="item-small form-control numhtml" id="cantidadTarimas" required />
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">Tarimas</div>
-                                    </div>
 
-                                </div>
-                            </div>
-                            <div class='col-md-4 col-12'>
-                                <label for="cantidadSacos" class="pt-1 pr-1"><strong>ensacado:</strong></label>
-                                <div class="input-group mt-4">
-                                    <input type="text" name="cantidadSacos[]" class="item-small form-control numhtml" id="cantidadSacos" required />
-                                    <div class="input-group-prepend">
-                                        <div class="input-group-text">Sacos</div>
-                                    </div>
-
-                                </div>
-                            </div>
                         </div>
                         <div class='row'>
                             <div class='col-md-6 col-12'>
@@ -120,7 +138,7 @@ require_once views_root . 'servicios/assets/js/app_ensacado.js.php';
 
                 <div><button id="agregarAlmacen" type="button" class="btn-azul folio p-1">Agregar almacén</button></div>
                 <div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <button type="button" class="btn btn-primary" id="enviarFinalizarServicio">Finalizar</button>
                 </div>
             </div>

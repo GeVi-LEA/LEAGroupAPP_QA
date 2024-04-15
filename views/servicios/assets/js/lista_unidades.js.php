@@ -41,6 +41,10 @@ const getUnidades = () => {
                 {
                     data: 'nombreCliente',
                     // width: '80%'
+                },
+                {
+                    data: 'fecha_entrada',
+                    // width: '80%'
                 }
 
             ],
@@ -344,7 +348,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                         mensajeError("Algo salio mal,  contacte al administrador.");
                                     },
                                 });
-                                $.ajax({
+                                /*$.ajax({
                                     data: {
                                         id: servicio.id,
                                         numUnidad: servicio.numUnidad,
@@ -372,7 +376,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                         console.log(r.responseText);
                                         mensajeError("Algo salio mal,  contacte al administrador.");
                                     },
-                                });
+                                });*/
                             } else {
                                 erpalert("error", "Error", resp.mensaje)
                                 mensajeError(resp.mensaje);
@@ -739,6 +743,7 @@ function formatDate(date) {
 
 const validaCampos = () => {
     let faltan = false;
+    /*
     $("#pesoCliente").removeClass("invalid").removeClass("checked");
     if ($("#pesoCliente").val() == "") {
         faltan = true;
@@ -746,6 +751,7 @@ const validaCampos = () => {
     } else {
         $("#pesoCliente").addClass("checked");
     }
+    */
     $("#cliente").removeClass("invalid").removeClass("checked");
     if ($("#cliente").val() == "") {
         faltan = true;

@@ -76,7 +76,7 @@ const getServicios = () => {
                                                                                                       <h6 class='card-title'>${servicios[x].producto}(${servicios[x].lote}) <br /> ${servicios[x].cliente}</h6>
                                                                                                       <span hidden>${servicios[x].ticket}</span>
                                                                                                       <div class='botones'>
-                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\',\''+servicios[x].sacoxtarima+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+',\''+servicios[x].ticket+'\')">play_arrow</span>' )}
+                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\',\''+servicios[x].sacoxtarima+'\',\''+servicios[x].cliente_id+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+',\''+servicios[x].ticket+'\')">play_arrow</span>' )}
                                                                                                             
                                                                                                       </div>
                                                                                                       <h6 class='card-subtitle text-muted'><i>TIPO SERVICIO(${servicios[x].empaque})</i></h6>
@@ -109,7 +109,7 @@ const getServicios = () => {
                                                             <div class='card-body p-0'>
                                                                   <h6 class='card-title'>${servicios[x].producto}(${servicios[x].lote}) <br /> ${servicios[x].cliente}</h6>
                                                                   <div class='botones'>
-                                                                        ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+')">play_arrow</span>' )}
+                                                                        ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\',\''+servicios[x].cliente_id+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+')">play_arrow</span>' )}
                                                                   </div>
                                                                   <h6 class='card-subtitle text-muted'><i>TIPO SERVICIO(${servicios[x].empaque})</i></h6>
                                                                   <div class='card-body'>
@@ -711,7 +711,7 @@ function iniciarServicio(id, ticket) {
     // }
 }
 
-function detenerServicio(id, cantidad, sacoxtarima) {
+function detenerServicio(id, cantidad, sacoxtarima, cliente_id = "") {
     var form = $("#formEnviarAlmacen");
     var select = $(form).find("#selectAlmacen");
     console.log(select);
@@ -742,11 +742,29 @@ function detenerServicio(id, cantidad, sacoxtarima) {
             alert("Algo salio mal, contacte al Administrador.");
         },
     });
+    $("#cantidadEnviar").on("change blur", function() {
+        console.log("-->cantidadEnviar");
+        // setTimeout(() => {
+        convertiLBS("cantidadEnviar");
+        // }, 300);
+    });
+    $("#cantidadLBS1, #cantidad, #cantidad_lbs").on("change keyup", function() {
+        console.log("-->cantidadLBS");
+        // setTimeout(() => {
+        convertiLBS("cantidadLBS");
+        // }, 300);
+    });
+    $("#cantidad, #cantidad_lbs").on("change keyup", function(a, b) {
+        console.log("-->", a.target.id);
+        convertiLBS(a.target.id);
+    });
+
     $("#formEnviarAlmacen input").val("");
     $("#idServicioEnviar").val(id);
     $(form).find(id);
     $(form).find($("#operacionEnviar")).val("E");
     $(form).find($("#cantidadCliente")).val(quitarComasNumero(cantidad));
+    $(form).find($("#cliente_id")).val(cliente_id);
     $("#enviarAlmacenModal1").modal("show");
     $("#formEnviarAlmacen input").trigger("blur");
     $("#enviarFinalizarServicio").unbind();
@@ -847,5 +865,41 @@ function quitarComasNumero(value) {
         return value;
     }
 
+}
+
+function convertiLBS(quiencambio) {
+    // console.log(quiencambio);
+    cambiokg = quiencambio;
+    var libras = $("#cantidadLBS1").val() == "" ? 0 : quitarComasNumero($("#cantidadLBS1").val());
+    var kilos = $("#cantidadEnviar").val() == "" ? 0 : quitarComasNumero($("#cantidadEnviar").val());
+    // setTimeout(() => {
+    console.log("quiencambio: ", quiencambio);
+    if (quiencambio == "cantidadLBS") {
+        libras = $("#cantidadLBS").val() == "" ? 0 : quitarComasNumero($("#cantidadLBS1").val());
+        var kilos_conv = libras / 2.2046;
+        $("#cantidadEnviar").val(htmlNum(kilos_conv));
+        // $("#cantidadLBS").val(htmlNum(libras));
+        // console.log("kilos: ", kilos, " libras: ", libras);
+        // console.log("kilos_conv: ", kilos_conv, " libras_conv: ", libras_conv);
+        console.log("aa");
+    } else if (quiencambio == "cantidadEnviar") {
+        // var kilos = $("#cantidadEnviar").val() == "" ? 0 : quitarComasNumero($("#cantidadEnviar").val());
+        kilos = $("#cantidadEnviar").val() == "" ? 0 : quitarComasNumero($("#cantidadEnviar").val());
+        var libras_conv = kilos * 2.2046;
+        // $("#cantidadEnviar").val(htmlNum(kilos));
+        $("#cantidadLBS1").val(htmlNum(libras_conv));
+    } else if (quiencambio == "cantidad") {
+        kilos = $("#cantidad").val() == "" ? 0 : quitarComasNumero($("#cantidad").val());
+        var libras_conv = kilos * 2.2046;
+        // $("#cantidadEnviar").val(htmlNum(kilos));
+        $("#cantidad_lbs").val(htmlNum(libras_conv));
+    } else if (quiencambio == "cantidad_lbs") {
+        libras = $("#cantidad_lbs").val() == "" ? 0 : quitarComasNumero($("#cantidad_lbs").val());
+        var kilos_conv = libras / 2.2046;
+        $("#cantidad").val(htmlNum(kilos_conv));
+    }
+    console.log("kilos: ", kilos, " libras: ", libras);
+    console.log("kilos_conv: ", kilos_conv, " libras_conv: ", libras_conv);
+    // }, 500);
 }
 </script>

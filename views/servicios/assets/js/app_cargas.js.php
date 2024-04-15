@@ -49,7 +49,7 @@ const getServicios = () => {
                                                                                                 <div class='card-body p-0'>
                                                                                                       <h6 class='card-title'><strong>Producto:</strong>${servicios[x].producto} - <strong>Lote:</strong>${servicios[x].lote} - <strong>Almacén:</strong>${(servicios[x].almacen!="")?'<i>'+servicios[x].almacen+'</i>':""} <br /> ${servicios[x].cliente}</h6>
                                                                                                       <div class='botones'>
-                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+')">play_arrow</span>' )}
+                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\','+servicios[x].almacen_id+','+servicios[x].cliente_id+')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+')">play_arrow</span>' )}
                                                                                                             
                                                                                                       </div>
                                                                                                       <h6 class='card-subtitle text-muted'><i>TIPO SERVICIO(${servicios[x].empaque}) CARGA</i></h6>
@@ -74,7 +74,7 @@ const getServicios = () => {
                                                             <div class='card-body p-0'>
                                                                   <h6 class='card-title'><strong>Producto:</strong>${servicios[x].producto} - <strong>Lote:</strong>${servicios[x].lote} - <strong>Almacén:</strong>${(servicios[x].almacen!="")?'<i>'+servicios[x].almacen+'</i>':""} <br /> ${servicios[x].cliente}</h6>
                                                                   <div class='botones'>
-                                                                        ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+','+servicios[x].almacen_id+')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+')">play_arrow</span>' )}
+                                                                        ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\','+servicios[x].almacen_id+','+servicios[x].cliente_id+')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+')">play_arrow</span>' )}
                                                                   </div>
                                                                   <h6 class='card-subtitle text-muted'><i>TIPO SERVICIO(${servicios[x].empaque})</i></h6>
                                                                   <div class='card-body'>
@@ -675,7 +675,7 @@ function iniciarServicio(id) {
     });
 }
 
-function detenerServicio(id, almacen_id = "1") {
+function detenerServicio(id, kilos = "", almacen_id = "1", cliente_id = "") {
     var form = $("#formEnviarAlmacen");
     var select = $(form).find("#selectAlmacen");
     $.ajax({
@@ -708,7 +708,7 @@ function detenerServicio(id, almacen_id = "1") {
     $(form).find(id);
     $(form).find($("#operacionEnviar")).val("S");
     //OBTIENE LOS SERVICIOS PENDIENTES
-
+    console.log("id: ", id, " almacen_id: ", almacen_id, " cliente_id: ", cliente_id)
     var cargaspendientes;
     var espera = 1;
     $.ajax({
@@ -743,7 +743,7 @@ function detenerServicio(id, almacen_id = "1") {
 
                                     </div>
                                 </div>
-                        
+
                             `;
                 }
                 html += `
@@ -775,10 +775,11 @@ function detenerServicio(id, almacen_id = "1") {
                                 entrada_id: servicio.entrada_id,
                                 sellos: getSellos(),
                                 firma: getTrazado(),
+                                cliente_id: cliente_id,
 
 
                             },
-                            url: "?ajax&controller=Servicios&action=finalizarServicio",
+                            url: __url_erp__ + "?ajax&controller=Servicios&action=finalizarServicio",
                             type: "POST",
                             dataType: "json",
                             success: function(r) {
@@ -833,7 +834,7 @@ function detenerServicio(id, almacen_id = "1") {
 
 
                                     },
-                                    url: "?ajax&controller=Servicios&action=finalizarServicio",
+                                    url: __url_erp__ + "?ajax&controller=Servicios&action=finalizarServicio",
                                     type: "POST",
                                     dataType: "json",
                                     success: function(r) {
@@ -874,6 +875,7 @@ function detenerServicio(id, almacen_id = "1") {
     // }
     // });
 }
+
 
 function getSellos() {
     var jsonObj = [];

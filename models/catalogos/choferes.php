@@ -156,26 +156,22 @@ class CatChoferes
         $result = array();
         $query  = "
             SELECT 
-         chof.id as chof_id 
-       , chof.nombres as chof_nombres
-       , chof.apellidos as chof_apellidos 
-       , chof.cat_transp_id as chof_trans_id
-       , chof.is_lea as chof_is_lea
-       , chof.num_licencia as chof_licencia
-       , chof.vigencia as chof_vigencia
-       , chof.comentarios as chof_comentarios
-       , chof.ine as chof_ine
-       , if(chof.is_lea like '%S%', (select p.nombre from catalogo_proveedores p where p.id = chof.cat_transp_id), 
-        ( select ct.nombre from catalogo_transportistas_clientes ct where ct.id = chof.cat_transp_id)) as transportista
-        FROM catalogo_choferes_transportistas chof";
+              cat_trans.id cat_trans_id
+            , cat_trans.nombre cat_trans_nombre
+            , chof.id chof_id 
+            , concat(chof.nombres,' ', chof.apellidos) chof_nombre
+            , chof.nombres chof_nombres
+            , chof.apellidos chof_apellidos 
+            FROM  catalogo_choferes chof 
+            inner join catalogo_transportistas_clientes cat_trans on cat_trans.id = chof.cat_transp_id
+            
+            ";
 
         if ($sql != '') {
             $query .= $sql;
         }
-        $query .= ' order by chof.nombres';
-        // print_r('<pre>');
-        // print_r($query);
-        // print_r('</pre>');
+        $query .= 'order by cat_trans.id, chof.nombres';
+
         $Transportes = $this->db->query($query);
         while ($t = $Transportes->fetch_object()) {
             array_push($result, $t);
