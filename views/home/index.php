@@ -30,19 +30,20 @@ require_once views_root . 'home/assets/permisos.js.php';
                 </div>
             </div>
             <div class='col col-6 '>
-                <a href='<?= principalUrl ?>?controller=Servicios&action=listaUnidades&idEst=1'>
+                <a href='<?= principalUrl ?>?controller=Servicios&action=listaUnidades&idEst=11'>
                     <div class='card sombra btn-Transito'>
                         <span class="badge buttonAnimation" data-animation="jello" id="Transito_badge"></span>
                         <div class='card-content'>
                             <div class='card-body p-0' style='color:yellow'>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <span class='fa-solid fa-arrow-right-arrow-left material-icons i-transit btn-icon pr-1 mr-1'></span>
+                                        <span class='fa-solid fa-car-tunnel material-icons i-transit btn-icon pr-1 mr-1'></span>
+                                        <!-- <i class="fa-regular fa-car-building"></i> -->
                                     </div>
                                 </div>
                                 <div class='row'>
                                     <div class='col-12'>
-                                        <span>Tránsito</span>
+                                        <span>En Terminal</span>
                                     </div>
                                 </div>
                             </div>

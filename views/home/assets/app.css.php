@@ -99,7 +99,6 @@
 .item {
     width: 100%;
     height: 3rem;
-    font-size: 1.5rem !important;
 }
 
 .checked {
@@ -108,5 +107,16 @@
 
 .invalid {
     border: solid 2px red !important;
+}
+
+.emsg_input {
+    border: solid #990033 !important;
+}
+
+.emsg {
+    color: #990033 !important;
+    font-style: italic !important;
+    margin-left: 1%;
+    font-size: small;
 }
 </style>

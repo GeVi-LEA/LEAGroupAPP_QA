@@ -4,7 +4,7 @@ $_root    = str_replace('\\', '/', preg_replace($_pattern, '$1', root));
 $base     = substr($_root, 0, strpos($_root, 'LEAGroupAPP_QA')) . 'LEAGroupAPP_QA';
 define('base', $base);
 define('root_url', 'http://192.168.0.32/LEAGroupAPP_QA/');
-define('URL', 'http://192.168.0.32/GrupoLEA_DEV/');
+define('URL', 'http://192.168.0.32/GrupoLEA_QA/');
 define('idioma', 'spanish');
 define('BD_CAMIONERA', 'MToledoCam');
 define('BD_FERRO', 'MToledo');

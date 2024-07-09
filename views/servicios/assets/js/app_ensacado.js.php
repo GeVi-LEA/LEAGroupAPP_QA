@@ -8,6 +8,8 @@
 <script>
 let servicios;
 var sacosxtarima;
+var tipoempaque = 2;
+
 $(document).ready(function() {
     console.log("entra en app ensacado");
     getServicios();
@@ -18,26 +20,30 @@ $(document).ready(function() {
         }
     }, 60000);
     $("#formEnviarAlmacen input").keyup(function() {
-        let bsucia = 0;
-        let blimpia = 0;
-        let total = 0;
-        let cantenviar = 0;
-        let tarimas = 0;
-        let sacos = 0;
-        tarimas = ($("#cantidadTarimas").val() == "") ? 0 : quitarComasNumero($("#cantidadTarimas").val());
-        sacos = ($("#cantidadSacos").val() == "") ? 0 : quitarComasNumero($("#cantidadSacos").val());
+        console.log("tipoempaque: ", tipoempaque);
+        if (tipoempaque == 2) {
+            let bsucia = 0;
+            let blimpia = 0;
+            let total = 0;
+            let cantenviar = 0;
+            let tarimas = 0;
+            let sacos = 0;
+            tarimas = ($("#cantidadTarimas").val() == "") ? 0 : quitarComasNumero($("#cantidadTarimas").val());
+            sacos = ($("#cantidadSacos").val() == "") ? 0 : quitarComasNumero($("#cantidadSacos").val());
 
-        total += (sacos * 25);
-        total += ((tarimas * sacosxtarima) * 25);
+            total += (sacos * 25);
+            total += ((tarimas * sacosxtarima) * 25);
 
-        bsucia = ($("#BarreduraSucia").val() == "") ? 0 : quitarComasNumero($("#BarreduraSucia").val());
-        blimpia = ($("#BarreduraLimpia").val() == "") ? 0 : quitarComasNumero($("#BarreduraLimpia").val());
-        console.log("total: ", total, " bsucia: ", bsucia, " blimpia: ", blimpia);
-        cantenviar = parseInt(total); //- (parseInt(bsucia) + parseInt(blimpia));
+            bsucia = ($("#BarreduraSucia").val() == "") ? 0 : quitarComasNumero($("#BarreduraSucia").val());
+            blimpia = ($("#BarreduraLimpia").val() == "") ? 0 : quitarComasNumero($("#BarreduraLimpia").val());
+            console.log("total: ", total, " bsucia: ", bsucia, " blimpia: ", blimpia);
+            cantenviar = parseInt(total); //- (parseInt(bsucia) + parseInt(blimpia));
 
-        $("#cantidadEnviar").val(cantenviar);
-        $("#cantidadEnviar").trigger("blur");
-
+            $("#cantidadEnviar").val(cantenviar);
+            $("#cantidadEnviar").trigger("blur");
+        } else {
+            $("#cantidadEnviar, .convertilbs").attr("readonly", false);
+        }
     });
 });
 
@@ -64,7 +70,7 @@ const getServicios = () => {
                                                             <div class='card sombra'>
                                                                   <div class='card-content'>
                                                                         <div class='card-header'>
-                                                                              <h4 class='card-title'>${servicios[x].hopper}(HOPPER)</h4>
+                                                                              <h4 class='card-title'>${servicios[x].hopper}(${servicios[x].tipo_transporte})</h4>
                                                                               <input type="hidden" class="numeroUnidad" value="${servicios[x].hopper}"/>
                                                                         </div>
                                                                         <div class='card-body p-0'>
@@ -76,7 +82,7 @@ const getServicios = () => {
                                                                                                       <h6 class='card-title'>${servicios[x].producto}(${servicios[x].lote}) <br /> ${servicios[x].cliente}</h6>
                                                                                                       <span hidden>${servicios[x].ticket}</span>
                                                                                                       <div class='botones'>
-                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\',\''+servicios[x].sacoxtarima+'\',\''+servicios[x].cliente_id+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+',\''+servicios[x].ticket+'\')">play_arrow</span>' )}
+                                                                                                            ${(servicios[x].fecha_inicio !="" ? '<span id="detenerServicios" class="fa-regular fa-circle-stop material-icons i-pdf border-btn" onclick="detenerServicio('+servicios[x].id_servicio+',\''+servicios[x].kilos+'\',\''+servicios[x].sacoxtarima+'\',\''+servicios[x].cliente_id+'\',\''+servicios[x].empaque+'\')"></span>':'<span id="iniciarServicios" class="material-icons i-iniciar border-btn" onclick="iniciarServicio('+servicios[x].id_servicio+',\''+servicios[x].ticket+'\')">play_arrow</span>' )}
                                                                                                             
                                                                                                       </div>
                                                                                                       <h6 class='card-subtitle text-muted'><i>TIPO SERVICIO(${servicios[x].empaque})</i></h6>
@@ -711,7 +717,7 @@ function iniciarServicio(id, ticket) {
     // }
 }
 
-function detenerServicio(id, cantidad, sacoxtarima, cliente_id = "") {
+function detenerServicio(id, cantidad, sacoxtarima, cliente_id = "", empaque = "") {
     var form = $("#formEnviarAlmacen");
     var select = $(form).find("#selectAlmacen");
     console.log(select);
@@ -758,7 +764,10 @@ function detenerServicio(id, cantidad, sacoxtarima, cliente_id = "") {
         console.log("-->", a.target.id);
         convertiLBS(a.target.id);
     });
-
+    if (empaque != "Sacos") {
+        $("#cantidadEnviar, .convertilbs").attr("readonly", false);
+        tipoempaque = 1;
+    }
     $("#formEnviarAlmacen input").val("");
     $("#idServicioEnviar").val(id);
     $(form).find(id);

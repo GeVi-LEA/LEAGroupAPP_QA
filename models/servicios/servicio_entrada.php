@@ -420,6 +420,10 @@ class ServicioEntrada
                 , c.direccion direccion_cliente 
                 ,(SELECT sum(ifnull(total_ensacado,cantidad)) FROM servicios_ensacado where entrada_id = se.id and estatus_id <>0 and servicio_id in(1,4,5) ) totalensacado
                 ,(SELECT count(*) FROM servicios_ensacado where entrada_id = se.id and estatus_id not in(0, 5)) serv_pendientes
+                , case 
+                    when se.tipo_producto = 0 then \'Polietileno\'
+                    else \'Lubricantes\'
+                end tipo_producto
                 from servicios_entradas se  
                 inner join catalogo_estatus es on es.id = se.estatus_id 
                 left join catalogo_clientes c on c.id = se.cliente_id ';
@@ -429,7 +433,10 @@ class ServicioEntrada
         } else {
             $sql .= ' order by se.id desc';
         }
-
+        // print_r('<pre>');
+        // print_r($sql);
+        // print_r('</pre>');
+        // 
         $ensacados = $this->db->query($sql);
         if ($ensacados != null) {
             foreach ($ensacados->fetch_all(MYSQLI_ASSOC) as $e) {
@@ -452,11 +459,18 @@ class ServicioEntrada
     {
         if ($idEst != null && $idEst != '') {
             if ($idEst == 5) {
-                $sql = " where estatus_id = {$idEst} /*and se.fecha_salida >= DATE_ADD(curdate(), INTERVAL -1 month)*/ order by se.id desc";
+                $sql = " where (estatus_id = {$idEst} or (tipo_producto = 1 and estatus_id not in(0,15))) 
+                /*and se.fecha_salida >= DATE_ADD(curdate(), INTERVAL -1 month)*/ 
+                order by se.id desc";
             } elseif ($idEst == 11 and $pendientePeso = 1) {
-                $sql = " where estatus_id = {$idEst} and se.peso_obligatorio = 1 and se.ticket is null and c.peso_bascula_ffcc = 1 and c.peso_bascula_cam = 1 order by se.fecha_entrada desc";
+                $sql = " where (estatus_id = {$idEst} or (tipo_producto = 1 and estatus_id not in(0,15)) ) 
+                /*and se.peso_obligatorio = 1 
+                and se.ticket is null 
+                and c.peso_bascula_ffcc = 1
+                 and c.peso_bascula_cam = 1 */
+                 order by se.fecha_entrada desc";
             } elseif ($idEst == 14) {
-                $sql = " where se.estatus_id in( 11, 3) #and (ticket is not null or tipo_transporte_id in(12)) 
+                $sql = " where (se.estatus_id in( 11, 3) or (tipo_producto = 1 and estatus_id not in(0,15))) #and (ticket is not null or tipo_transporte_id in(12)) 
                             #and se.id in (select entrada_id from servicios_ensacado serv where serv.servicio_id in (5) and serv.estatus_id not in(0) and serv.estatus_id not in(1,3,13) )
                             and se.id in(
                                 select entrada_id
@@ -467,9 +481,9 @@ class ServicioEntrada
                             and se.estatus_bascula = 'C'
                             order by se.fecha_entrada desc";
             } elseif ($idEst == 15) {
-                $sql = '  where se.estatus_id in(5, 14) order by se.fecha_entrada desc';
+                $sql = '  where (se.estatus_id in(5, 14) or (tipo_producto = 1 and estatus_id not in(0,15))) order by se.fecha_entrada desc';
             } else {
-                $sql = " where estatus_id in( {$idEst}) order by se.id desc";
+                $sql = " where (estatus_id in( {$idEst}) or (tipo_producto = 1 and estatus_id not in(0,15))) order by se.id desc";
             }
         } else {
             $sql = null;
@@ -611,9 +625,9 @@ class ServicioEntrada
     public function unidadRegistrada()
     {
         if (!$this->getId()) {
-            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id not in(0, 5)";
+            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id not in(0, 5, 15)";
         } else {
-            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id not in(0, 5) and id !=  {$this->getId()}";
+            $sql = "select * from servicios_entradas where numUnidad = '{$this->getNumUnidad()}' and estatus_id not in(0, 5, 15) and id !=  {$this->getId()}";
         }
         return $this->db->query($sql);
     }

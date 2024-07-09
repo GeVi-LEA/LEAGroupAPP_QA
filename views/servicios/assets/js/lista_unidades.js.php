@@ -45,6 +45,10 @@ const getUnidades = () => {
                 {
                     data: 'fecha_entrada',
                     // width: '80%'
+                },
+                {
+                    data: 'tipo_producto',
+                    // width: '80%'
                 }
 
             ],
@@ -63,15 +67,34 @@ const getUnidades = () => {
                 url: '<?php echo root_url; ?>assets/libs/datatables/es-MX.json',
             },
             initComplete: function(settings, json) {
+                console.log("AQQ");
+                try {
+                    $(".showEnsacado").unbind();
+                    $(".showEnsacado").click(function(a) {
+                        console.log(a.currentTarget);
+                        accionEtapa(a.currentTarget.dataset.idserv, a.currentTarget.firstChild.nodeValue);
+
+                    });
+                } catch (error) {
+                    console.log("error: ", error);
+                }
+
+            }
+        });
+        $('#tableUnidades').on('draw.dt', function() {
+            try {
                 $(".showEnsacado").unbind();
                 $(".showEnsacado").click(function(a) {
                     console.log(a.currentTarget);
                     accionEtapa(a.currentTarget.dataset.idserv, a.currentTarget.firstChild.nodeValue);
 
                 });
+            } catch (error) {
+                console.log("error: ", error);
             }
-        });
 
+
+        });
     }).fail(resp => {}).catch(resp => {
         erpalert("error", 'Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores... ' + resp);
         console.log("error unidades: ", resp);
@@ -294,6 +317,8 @@ const accionEtapa = (idserv, tipoUnidad) => {
                     },
                     didOpen: () => {
                         let tipoferre = "A";
+                        $("#ensacadoForm").find("input").attr("readonly", false);
+                        $("#ensacadoForm").find("select").attr("readonly", false);
                         if (servicio.tipo_transporte_id == 6 || servicio.tipo_transporte_id == 12) {
                             tipoferre = "F";
                         }
@@ -397,7 +422,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
 
 
             break;
-        case "11":
+        case "111":
             servicio = servicios.find(function(e) {
                 return e.id === idserv;
             });;
@@ -753,12 +778,12 @@ const validaCampos = () => {
     }
     */
     $("#cliente").removeClass("invalid").removeClass("checked");
-    if ($("#cliente").val() == "") {
-        faltan = true;
-        $("#cliente").addClass("invalid");
-    } else {
-        $("#cliente").addClass("checked");
-    }
+    // if ($("#cliente").val() == "") {
+    // faltan = true;
+    // $("#cliente").addClass("invalid");
+    // } else {
+    // $("#cliente").addClass("checked");
+    // }
 
     if ($("#transporteTren").is(":visible")) {
         $("#transporteTren").removeClass("invalid").removeClass("checked");

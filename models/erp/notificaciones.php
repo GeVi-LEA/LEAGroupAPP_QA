@@ -77,18 +77,18 @@ class Notificacion
 
     function save()
     {
-        $sql = "insert into grupo_lea.erp_notificaciones(user_id,titulo,mensaje) values({$this->getUserId()}, ";
+        $sql = "insert into erp_notificaciones(user_id,titulo,mensaje) values({$this->getUserId()}, ";
 
         if ($this->getTitulo() == null) {
             $sql .= " 'Mensaje del sistema', ";
         } else {
-            $sql .= " '{$this->getTitulo()}',  ";
+            $sql .= " UPPER('{$this->getTitulo()}'),  ";
         }
 
         if ($this->getMensaje() == null) {
             $sql .= " 'Mensaje del sistema', ";
         } else {
-            $sql .= " '{$this->getMensaje()}',  ";
+            $sql .= " UPPER('{$this->getMensaje()}'),  ";
         }
 
         $save   = $this->db->query($sql);
@@ -101,7 +101,7 @@ class Notificacion
 
     function setAsRead()
     {
-        $sql    = "update grupo_lea.erp_notificaciones set status = 1 where id = {$this->getId()}";
+        $sql    = "update erp_notificaciones set status = 1 where id = {$this->getId()}";
         $delete = $this->db->query($sql);
         $result = false;
         if ($delete) {
@@ -112,7 +112,7 @@ class Notificacion
 
     function delete()
     {
-        $sql    = "update grupo_lea.erp_notificaciones set status = 0 where id = {$this->getId()}";
+        $sql    = "update erp_notificaciones set status = 0 where id = {$this->getId()}";
         $delete = $this->db->query($sql);
         $result = false;
         if ($delete) {
@@ -123,7 +123,7 @@ class Notificacion
 
     function getById()
     {
-        $sql    = "select * from grupo_lea.erp_notificaciones where id = {$this->getId()}";
+        $sql    = "select * from erp_notificaciones where id = {$this->getId()}";
         $result = $this->db->query($sql);
         return $result->fetch_object();
     }
@@ -131,7 +131,7 @@ class Notificacion
     function getNotificacionesByUserId($user_id)
     {
         $result = array();
-        $sql    = "select * from grupo_lea.erp_notificaciones where user_id = {$user_id} and status > 0 order by fecha_creacion desc;";
+        $sql    = "select * from erp_notificaciones where user_id = {$user_id} and status > 0 order by fecha_creacion desc;";
         // print_r($sql);
         $movs = $this->db->query($sql);
         while ($m = $movs->fetch_object()) {

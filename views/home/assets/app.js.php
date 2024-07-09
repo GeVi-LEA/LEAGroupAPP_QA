@@ -33,7 +33,7 @@ $(document).ready(function() {
 
             htmlclientes += `</select>`;
 
-            htmltransportes = `<strong class="mr-1">Transporte:</strong>
+            htmltransportes = `<strong class="mr-1">Tipo de Unidad:</strong>
                                           <select name="transporte" class="item" id="transporte">
                                                 <option value="" selected>--Selecciona--</option>`;
             for (var x = 0; x < transportes.length; x++) {
@@ -71,9 +71,9 @@ $(document).ready(function() {
                                           </div>
                                           <div class="form-group row mt-2">
                                                 <div class="col-12 datos mt-2 mb-1">
-                                                      <strong class="mr-1"># Unidad:</strong><input type="text" name="numeroUnidad" id="numeroUnidad" class="item" required/> 
+                                                      <strong class="mr-1"># Placa Tractor:</strong><input type="text" name="numeroUnidad" id="numeroUnidad" class="item" required/> 
                                                 </div>
-                                                <p><span class="emsg hidden">Número de UNIDAD no Válido (ABCD123456)</span></p>
+                                                <p><span class="emsg hidden">Número de TRACTOR no Válido (ABCD123456)</span></p>
                                           </div>
                                           <div class="form-group row">
                                                 <div class="col-12 ">
@@ -91,7 +91,6 @@ $(document).ready(function() {
                                                 <div class="col-12 datos mt-2 mb-1">
                                                       ${htmlclientes}
                                                 </div>
-                                                
                                           </div>
                                           
                                           <div class="form-group row mt-2">
@@ -128,8 +127,8 @@ $(document).ready(function() {
                                                                   <div>
                                                                         ${htmltransportes}
                                                                   </div>
-                                                                  <div><strong class="mr-1">Placa tractor #1:</strong><input name="placa1" class="item" id="placa1" type="text" /></div>
-                                                                  <div><strong class="mr-1">Placa tractor #2:</strong><input name="placa2" class="item" id="placa2" type="text" /> </div>
+                                                                  <div><strong class="mr-1">Placa Caja/Tanque #1:</strong><input name="placa1" class="item" id="placa1" type="text" /></div>
+                                                                  <div><strong class="mr-1">Placa Caja/Tanque #2:</strong><input name="placa2" class="item" id="placa2" type="text" /> </div>
                                                             </div>
                                                       </section>
                                                       <section id="seccionFerrotolva" hidden>
@@ -233,12 +232,12 @@ const validaCampos = () => {
         $("#numeroUnidad").addClass("checked");
     }
     $("#cliente").removeClass("invalid").removeClass("checked");
-    if (($("#cliente").val() == "") && ($("#cliente").is(":visible"))) {
-        faltan = true;
-        $("#cliente").addClass("invalid");
-    } else {
-        $("#cliente").addClass("checked");
-    }
+    // if (($("#cliente").val() == "") && ($("#cliente").is(":visible"))) {
+    // faltan = true;
+    // $("#cliente").addClass("invalid");
+    // } else {
+    // $("#cliente").addClass("checked");
+    // }
 
     if ($("#transporteTren").is(":visible")) {
         $("#transporteTren").removeClass("invalid").removeClass("checked");

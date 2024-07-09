@@ -339,7 +339,7 @@ class serviciosController
         if ($numeroFerro) {
             $ensacado = new ServicioEntrada();
             $ensacado->setId($id);
-            $ensacado->setNumUnidad($numeroFerro);
+            $ensacado->setNumUnidad(strtoupper($numeroFerro));
             $ensacado->setClienteId($idCliente);
             $ensacado->setEstatusId($estatus);
             $ensacado->setPesoCliente($pesoCliente != null ? Utils::stringToFloat($pesoCliente) : 'null');
@@ -360,14 +360,13 @@ class serviciosController
             $ensacado->setCantPuertas($cant_puertas);
             $ensacado->setTranspLeaCliente($transp_lea_cliente);
             $ensacado->setCantPuertas($cant_puertas);
-            $ensacado->setTranspLeaCliente($transp_lea_cliente);
-            $ensacado->setEntrada_Salida($transp_lea_cliente);
-            $ensacado->setTipo_Producto($transp_lea_cliente);
+            $ensacado->setEntrada_Salida($entrada_salida);
+            $ensacado->setTipo_Producto($tipo_producto);
             $ensacado->setEstatusId($estatus);
             // $ensacado->setFechaEntrada('NOW()');
 
             $f = $ensacado->unidadRegistrada();
-            if ($f->num_rows >= 1) {
+            if ($f->num_rows >= 1 && $id == '') {
                 $result = [
                     'error'   => false,
                     'mensaje' => 'Unidad ya registrada.'
