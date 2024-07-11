@@ -523,6 +523,10 @@ class ServicioEntrada
                 , entrada_salida = '{$this->getEntrada_Salida()}'
                 , observaciones = '{$this->getObservaciones()}' 
                 where id = {$this->getId()}";
+
+                // print_r('<pre>');
+                // print_r($sql);
+                // print_r('</pre>');
         $save   = $this->db->query($sql);
         $result = false;
         if ($save) {

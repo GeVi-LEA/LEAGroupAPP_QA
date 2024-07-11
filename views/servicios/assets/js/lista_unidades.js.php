@@ -422,7 +422,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
 
 
             break;
-        case "111":
+        case "11":
             servicio = servicios.find(function(e) {
                 return e.id === idserv;
             });;
@@ -604,7 +604,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                             method: 'post',
                             dataType: "json",
                         }).then(resp => {
-                            console.log(resp);
+                            console.log("resp: ", resp);
                             if (resp.error) {
                                 erpalert("", "Báscula", resp.mensaje);
 
@@ -613,10 +613,15 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                 mensajeError(resp.mensaje);
                             }
                             getUnidades();
-                        }).fail(resp => {}).catch(resp => {
-                            swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
-                                icon: 'error'
-                            });
+                        }).fail(resp => {
+                            console.log("resp: ", resp);
+                            mensajeError('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores... ', resp.mensaje);
+                        }).catch(resp => {
+                            console.log("resp: ", resp);
+                            mensajeError('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores... ', resp.mensaje);
+                            // swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
+                            // icon: 'error'
+                            // });
                         });
                     }
                 });

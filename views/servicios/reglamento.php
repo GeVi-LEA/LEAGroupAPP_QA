@@ -31,7 +31,8 @@
     </style>
     <script>
     let firmado = 0;
-    let __url__ = localStorage.getItem("_URL_");
+    let __url_app__ = localStorage.getItem("_URL_APP_");
+    let __url_erp__ = localStorage.getItem("_URL_ERP_");
 
     $(document).ready(function() {
         // VALIDA SI HAY ID DE ENTRADA
@@ -182,7 +183,7 @@
 
 
             },
-            url: __url__ + "?ajax&controller=Servicios&action=guardarFirmaEntrada",
+            url: __url_app__ + "?ajax&controller=Servicios&action=guardarFirmaEntrada",
             type: "POST",
             dataType: "json",
             success: function(r) {

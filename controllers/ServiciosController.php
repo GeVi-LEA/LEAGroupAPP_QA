@@ -303,11 +303,11 @@ class serviciosController
 
     public function guardarEnsacado()
     {
-        $result      = [];
-        $id          = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : false;
-        $numeroFerro = isset($_POST['numeroUnidad']) && $_POST['numeroUnidad'] != '' ? $_POST['numeroUnidad'] : false;
-        $idCliente   = $_POST['cliente'];
-        $productoId  = isset($_POST['producto']) && $_POST['producto'] != '' ? $_POST['producto'] : null;
+        $result             = [];
+        $id                 = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : false;
+        $numeroFerro        = isset($_POST['numeroUnidad']) && $_POST['numeroUnidad'] != '' ? $_POST['numeroUnidad'] : false;
+        $idCliente          = isset($_POST['cliente']) && $_POST['cliente'] != '' ? $_POST['cliente'] : 0;//$_POST['cliente'];
+        $productoId         = isset($_POST['producto']) && $_POST['producto'] != '' ? $_POST['producto'] : null;
 
         $transportista      = isset($_POST['transportista']) && $_POST['transportista'] != '' ? $_POST['transportista'] : null;
         $chofer             = isset($_POST['chofer']) && $_POST['chofer'] != '' ? $_POST['chofer'] : null;
@@ -378,10 +378,12 @@ class serviciosController
                     /* ENVIA NOTIFICACION AL EQUIPO */
                     $notificacion = new Notificacion();
                     $notificacion->sendNotificacionesByCveNoti('entradaunidad', 'Número de unidad: ' . $numeroFerro);
+                    $result = $ensacado->getAll(" where numUnidad = '".strtoupper($numeroFerro)."' and estatus_id = 11");
                     if ($r) {
                         $result = [
                             'error'   => true,
-                            'mensaje' => 'Se guardo correctamente.'
+                            'mensaje' => 'Se guardo correctamente.',
+                            'ensacado_id'=> $result
                         ];
                     } else {
                         $result = [
@@ -460,12 +462,14 @@ class serviciosController
                     if ($r) {
                         $result = [
                             'error'   => true,
-                            'mensaje' => 'Se edito correctamente.'
+                            'mensaje' => 'Se edito correctamente.',
+                            'ensacado'=> $ensacado
                         ];
                     } else {
                         $result = [
                             'error'   => false,
-                            'mensaje' => 'Ocurrio un error, no se pudo editar.'
+                            'mensaje' => 'Ocurrio un error, no se pudo editar.',
+                            'ensacado'=> $ensacado
                         ];
                     }
                 }

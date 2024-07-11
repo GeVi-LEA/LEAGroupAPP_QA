@@ -62,7 +62,7 @@ class Bascula{
         
     public function getPesos() {
         $this->db = Database::connectBdBascula($this->getBase());
-        $query = "select * from entrada where EntFol = {$this->getFolio()}";
+        $query = "select  TOP (1) * from [dbo].[unidades_bascula] where EntFol = {$this->getFolio()} order by EntFechaE desc";
         $smt = $this->db->query($query);
         $datos = $smt->fetch(PDO::FETCH_ASSOC);
         unset($smt);

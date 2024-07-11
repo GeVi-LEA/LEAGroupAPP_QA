@@ -195,10 +195,16 @@ $(document).ready(function() {
                         console.log(resp);
                         if (resp.error) {
                             erpalert("", "Alta", resp.mensaje)
-                            mensajeCorrecto(resp.mensaje);
+                            // mensajeCorrecto(resp.mensaje);
+                            console.log("transporte: ", resp.ensacado_id[0].tipo_transporte_id);
+                            if ((resp.ensacado_id[0].tipo_transporte_id != "6") && (resp.ensacado_id[0].tipo_transporte_id != "12")) {
+                                erpalert("", "Entrada", resp.mensaje);
+                                var urlreglamento = __url_app__ + "/views/servicios/reglamento.php?entrada=" + resp.ensacado_id[0].id;
+                                window.open(urlreglamento, "_self");
+                            }
                         } else {
                             erpalert("error", "Error", resp.mensaje)
-                            mensajeError(resp.mensaje);
+                            // mensajeError(resp.mensaje);
                         }
                     }).fail(resp => {}).catch(resp => {
                         swal('Ocurrio un problema en la peticion en el servidor, favor de reportar a los administradores', {
