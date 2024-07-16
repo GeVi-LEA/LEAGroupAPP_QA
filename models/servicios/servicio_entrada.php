@@ -401,6 +401,32 @@ class ServicioEntrada
         return $result;
     }
 
+    public function saveTicket()
+    {
+        $sql    = "update servicios_entradas set 
+                    peso_tara = {$this->getPesoTara()}
+                    , ticket = {$this->getTicket()}
+                    , peso_teorico = {$this->getPesoTeorico()}
+                    , peso_bruto = {$this->getPesoBruto()}
+                    , peso_neto = {$this->getPesoNeto()}
+                    , doc_ticket = '{$this->getDocTicket()}'
+                    where id = {$this->getId()}";
+
+       
+        // print_r('<pre>');
+        // print_r($sql);
+        // print_r('</pre>');
+        // die();
+        $save   = $this->db->query($sql);
+        $result = false;
+        if ($save) {
+            $result = true;
+        } else {
+            $result = false;
+        }
+        return $result;
+    }
+
     public function getAll($where = null)
     {
         $result = array();

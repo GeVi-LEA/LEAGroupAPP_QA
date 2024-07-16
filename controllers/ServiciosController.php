@@ -484,6 +484,45 @@ class serviciosController
         print_r(json_encode($result));
     }
 
+    public function guardarTicket()
+    {
+        $result             = [];
+        $numeroFerro        = isset($_POST['numeroUnidad']) && $_POST['numeroUnidad'] != '' ? $_POST['numeroUnidad'] : false;
+        $id                 = isset($_POST['id']) && $_POST['id'] != '' ? $_POST['id'] : false;
+        $pesoTara           = isset($_POST['tara']) && $_POST['tara'] != '' ? $_POST['tara'] : null;
+        $ticket             = isset($_POST['ticket']) && $_POST['ticket'] != '' ? $_POST['ticket'] : null;
+        $pesoTeorico        = isset($_POST['pesoTeorico']) && $_POST['pesoTeorico'] != '' ? $_POST['pesoTeorico'] : null;
+        $pesoBruto          = isset($_POST['pesoBruto']) && $_POST['pesoBruto'] != '' ? $_POST['pesoBruto'] : null;
+        $pesoNeto           = isset($_POST['pesoNeto']) && $_POST['pesoNeto'] != '' ? $_POST['pesoNeto'] : null;
+        $archivoTicket      = isset($_POST['archivoTicket']) && $_POST['archivoTicket'] != '' ? $_POST['archivoTicket'] : null;
+
+        $estatus = 11;
+
+        if ($numeroFerro) {
+            $entrada = new ServicioEntrada();
+            $entrada->setId($id);
+            $entrada->setPesoTara($pesoTara != null ? Utils::stringToFloat($pesoTara) : 'null');
+            $entrada->setPesoTeorico($pesoTeorico != null ? Utils::stringToFloat($pesoTeorico) : 'null');
+            $entrada->setPesoBruto($pesoBruto != null ? Utils::stringToFloat($pesoBruto) : 'null');
+            $entrada->setPesoNeto($pesoNeto != null ? Utils::stringToFloat($pesoNeto) : 'null');
+            $entrada->setTicket($ticket != null ? $ticket : 'null');
+    
+            $r = $entrada->saveTicket();
+            $result = [
+                'error'   => true,
+                'mensaje' => 'Se actualizó correctamente.'
+            ];
+        } else {
+            $result = [
+                'error'   => false,
+                'mensaje' => 'Ocurrio un error, valide los datos.'
+            ];
+        }
+
+        print_r(json_encode($result));
+    }
+
+
     public function eliminarDocumento()
     {
         if (isset($_POST['ferrotolva']) && $_POST['ferrotolva'] != '') {

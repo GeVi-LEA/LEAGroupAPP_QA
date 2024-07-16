@@ -482,6 +482,30 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                                       <input type="text" name="numeroUnidad" id="numeroUnidad" class="item" value="${servicio.numUnidad}" readonly disabled=""/> 
                                                 </div>
                                           </div>
+                                          <div class="form-group row">
+                                                <div class="col-12 ">
+                                                    <strong class="mr-1">Producto:</strong>
+                                                    <div id="divRadiosT" class="div-radiosT">
+                                                        <div class='row'>
+                                                            <div class='col'>
+                                                                <strong for="tipo_producto">Polietileno:</strong>
+                                                            </div>
+                                                            <div class='col'>
+                                                                <input class="ml-1 mr-3" id="tipo_producto" type="radio" disabled name="tipo_producto" value="0" ${(servicio.tipo_producto == "Polietileno") ? 'checked' : ''} />
+                                                            </div>
+                                                        </div>
+                                                        <div class='row'>
+                                                            <div class='col'>
+                                                                <strong for="tipo_productoL">Lubricante:</strong>
+                                                            </div>
+                                                            <div class='col'>
+                                                                <input class="ml-1" type="radio" disabled id="tipo_productoL" name="tipo_producto" value="1" ${(servicio.tipo_producto == "Lubricantes") ? 'checked' : '' } />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                          </div>
+                                          
                                           <h4 class="form-section"><i class="ft-user"></i> Datos Cliente</h4>
                                           <div class="form-group row mt-2">
                                                 <div class="col-12 datos mt-2 mb-1">
@@ -523,7 +547,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                           <div class="form-group row mt-2">
                                                 <div class="col-6 datos mt-2 mb-1">
                                                       <strong class="mr-1">Tara:</strong>
-                                                      <input type="text" name="tara" value="${((servicio.peso_tara != null) ? servicio.peso_tara : "0") }" id="tara" class="item" /><span class="ml-1">lbs.</span>
+                                                      <input type="text" name="tara" value="${((servicio.peso_tara != null) ? servicio.peso_tara : "0") }" id="tara" class="item numhtml" /><span class="ml-1">lbs.</span>
                                                 </div>
                                                 <div class="col-6 datos mt-2 mb-1">
                                                       <strong class="mr-1">Ticket:</strong>
@@ -533,16 +557,16 @@ const accionEtapa = (idserv, tipoUnidad) => {
                                                 
                                                 <div class="col-6 datos mt-2 mb-1">
                                                       <strong>Tara Kilos:</strong>
-                                                      <input type="text" name="taraKilos" value="${((servicio.pesoTaraKg != null) ? servicio.pesoTaraKg : "") }" id="taraKilos" class="item fixed" disabled /><span class="ml-1">kgs.</span>
+                                                      <input type="text" name="taraKilos" value="${((servicio.pesoTaraKg != null) ? servicio.pesoTaraKg : "") }" id="taraKilos" class="item fixed numhtml" disabled /><span class="ml-1">kgs.</span>
 
                                                 </div>
                                                 <div class="col-6 datos mt-2 mb-1">
                                                       <strong>Peso teorico:</strong>
-                                                      <input type="text" name="pesoTeorico" value="${((servicio.peso_teorico != null) ? servicio.peso_teorico : "") }" id="pesoTeorico" class="item fixed" disabled /><span class="ml-1">kgs.</span>
+                                                      <input type="text" name="pesoTeorico" value="${((servicio.peso_teorico != null) ? servicio.peso_teorico : "") }" id="pesoTeorico" class="item fixed numhtml" disabled /><span class="ml-1">kgs.</span>
                                                 </div>
                                                 <div class="col-6 datos mt-2 mb-1">
                                                       <strong>% Tolerable:</strong>
-                                                      <input type="text" name="tolerable" value="${((servicio.tolerable != null) ? servicio.tolerable : "") }" id="tolerable" class="item fixed" disabled /><span class="ml-1">kgs.</span>
+                                                      <input type="text" name="tolerable" value="${((servicio.tolerable != null) ? servicio.tolerable : "") }" id="tolerable" class="item fixed numhtml" disabled /><span class="ml-1">kgs.</span>
                                                 </div>
                                                 <div class="col-6 datos mt-2 mb-1">
                                                       <strong title="Diferencia entre peso teorico y peso cliente.">Diferencia teorica:</strong>
@@ -577,7 +601,6 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         }
                     },
                     didOpen: () => {
-
                         let tipoferre = "A";
                         if (servicio.tipo_transporte_id == 6 || servicio.tipo_transporte_id == 12) {
                             tipoferre = "F";
@@ -588,7 +611,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         });
                         $("#transportista").val(servicio.transportista);
                         formatoNumeros();
-
+                        mascaraNumeros();
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
@@ -596,7 +619,7 @@ const accionEtapa = (idserv, tipoUnidad) => {
                         var datosForm = new FormData($("#ensacadoForm")[0]);
                         console.log(datosForm);
                         jQuery.ajax({
-                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarEnsacado',
+                            url: __url_app__ + '?ajax&controller=Servicios&action=guardarTicket',
                             data: datosForm,
                             processData: false,
                             contentType: false,
@@ -883,6 +906,11 @@ function getPesos() {
                     if (numero == $("#numeroUnidad").val().trim()) {
                         $("#pesoBruto").val(htmlNum(r.EntPesoB));
                         $("#pesoTara").val(htmlNum(r.EntPesoT));
+                        try {
+                            $("#tara").val(htmlNum(r.EntDatosEmp.replace("TARA", "").replace(";", "").replace(",", "").replace("LBS", "").replace(":", "")));
+                        } catch (Exception) {
+                            console.log("no hay TARA");
+                        }
                         $("#horaPeso").val(r.EntHoraE);
                         $("#fechaPeso").val(formatDateToString(new Date(r.EntFechaE)));
                         $("#horaPesoSalida").val(r.EntHoraS);
@@ -953,6 +981,20 @@ function mensajeError(result) {
                 action: function() {},
             },
         },
+    });
+}
+
+function htmlNum2(num) {
+    //if ($.isNumeric(num)) {
+    return Number(num).toLocaleString("en");
+    //} else {
+    //    return "";
+    //}
+}
+
+function mascaraNumeros() {
+    $(".numhtml").each(function() {
+        $(this).val(htmlNum2($(this).val()));
     });
 }
 </script>
