@@ -12,6 +12,8 @@ $(document).ready(function() {
         //      swal.close();
         //}, 3000);
     });
+
+    setCaracteres();
     $(".btn-Alta").click(function() {
         jQuery.ajax({
             url: __url_app__ + '?ajax&controller=Servicios&action=getClientesYTransportes',
@@ -165,6 +167,7 @@ $(document).ready(function() {
                     $("#transportista").change(function() {
                         getChoferes($("#transportista option:selected").val());
                     });
+                    setCaracteres();
                 }
             }).then((result) => {
                 if (result.isConfirmed) {
@@ -225,6 +228,7 @@ $(document).ready(function() {
     setInterval(() => {
         validaCantidades();
     }, 30000);
+
 
 });
 
@@ -349,6 +353,17 @@ function getChoferes(transp_id) {
     });
 }
 
+function setCaracteres() {
+    $('#numeroUnidad').unbind();
+    $('#numeroUnidad').on('keypress', function(event) {
+        var regex = new RegExp("^[a-zA-Z0-9]+$");
+        var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+        if (!regex.test(key)) {
+            event.preventDefault();
+            return false;
+        }
+    });
+}
 /*
 function cambiaFerrotolva(ferrotolva) {
     var ferro = ferrotolva; //$(this).val();
